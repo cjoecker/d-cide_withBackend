@@ -38,7 +38,7 @@ class UserController {
     @Autowired
     lateinit var userRepository: UserRepository
 
-    @PostMapping("/login")
+    @PostMapping("/logIn")
     fun authenticateUser(@Valid @RequestBody loginRequest: LoginRequest, result: BindingResult): ResponseEntity<*> {
         val errorMap = mapValidationErrorService.MapValidationService(result)
         if (errorMap != null) return errorMap
