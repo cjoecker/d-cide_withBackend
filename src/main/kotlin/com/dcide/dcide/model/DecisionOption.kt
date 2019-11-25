@@ -2,8 +2,6 @@ package com.dcide.dcide.model
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import org.hibernate.annotations.Fetch
-import org.hibernate.annotations.FetchMode
 import javax.persistence.*
 
 @Entity
@@ -17,7 +15,7 @@ data class DecisionOption(
         //Parent
         @ManyToOne(fetch = FetchType.EAGER)
         @JsonIgnore
-        var project : Project?
+        var decision : Decision?
 
 ){
         //Relationships

@@ -1,11 +1,6 @@
 package com.dcide.dcide.model
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import lombok.Data
-import lombok.NoArgsConstructor
-import lombok.RequiredArgsConstructor
-import org.hibernate.annotations.Fetch
-import org.hibernate.annotations.FetchMode
 import javax.persistence.*
 
 @Entity
@@ -19,7 +14,7 @@ data class SelectionCriteria(
         //Parent
         @ManyToOne(fetch = FetchType.EAGER)
         @JsonIgnore
-        var project: Project?
+        var decision: Decision?
 
 
 ) {

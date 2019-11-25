@@ -21,15 +21,15 @@ internal class WeightedCriteriaController(private val weightedCriteriaRepository
     lateinit var selectionCriteriaRepository: SelectionCriteriaRepository
 
     @Autowired
-    lateinit var projectRepository: ProjectRepository
+    lateinit var decisionsRepository: DecisionsRepository
 
 
     @GetMapping("/every_weightedCriteria/{project_id}")
     fun everyWeightedCriteria(@PathVariable project_id: Long, principal: Principal): ResponseEntity<*> {
 
 
-        //Check user and project id
-        val project = projectRepository.findByIdOrNull(project_id)
+        //Check user and decision id
+        val project = decisionsRepository.findByIdOrNull(project_id)
 
         if (project == null || project.user!!.username != principal.name) {
             return ResponseEntity<Any>(null, HttpStatus.NOT_FOUND)
@@ -37,13 +37,13 @@ internal class WeightedCriteriaController(private val weightedCriteriaRepository
 
 
         val weightedCriteriaOld = weightedCriteriaRepository.findAll().filter {
-            it.selectionCriteria1.project!!.user!!.username == principal.name &&
-                    it.selectionCriteria2.project!!.user!!.username == principal.name
+            it.selectionCriteria1.decision!!.user!!.username == principal.name &&
+                    it.selectionCriteria2.decision!!.user!!.username == principal.name
         }
 
         val selectionCriteriaList = selectionCriteriaRepository.findAll().filter {
-            it.project!!.user!!.username == principal.name &&
-                    it.project!!.id == project_id
+            it.decision!!.user!!.username == principal.name &&
+                    it.decision!!.id == project_id
         }
 
 //        weightedCriteriaRepository.deleteAll(weightedCriteriaOld)
@@ -83,10 +83,10 @@ internal class WeightedCriteriaController(private val weightedCriteriaRepository
         }
 
         return ResponseEntity<Any>(weightedCriteriaRepository.findAll().filter {
-            it.selectionCriteria1.project!!.user!!.username == principal.name &&
-                    it.selectionCriteria2.project!!.user!!.username == principal.name &&
-                    it.selectionCriteria1.project!!.id == project_id &&
-                    it.selectionCriteria2.project!!.id == project_id
+            it.selectionCriteria1.decision!!.user!!.username == principal.name &&
+                    it.selectionCriteria2.decision!!.user!!.username == principal.name &&
+                    it.selectionCriteria1.decision!!.id == project_id &&
+                    it.selectionCriteria2.decision!!.id == project_id
         }.shuffled(), HttpStatus.OK)
 
     }
@@ -98,9 +98,9 @@ internal class WeightedCriteriaController(private val weightedCriteriaRepository
 
 
         val weightedCriteria = weightedCriteriaRepository.findAll().filter {
-            it.selectionCriteria1.project!!.user!!.username == principal.name &&
-                    it.selectionCriteria2.project!!.user!!.username == principal.name &&
-                    it.selectedCriteria.project!!.user!!.username == principal.name
+            it.selectionCriteria1.decision!!.user!!.username == principal.name &&
+                    it.selectionCriteria2.decision!!.user!!.username == principal.name &&
+                    it.selectedCriteria.decision!!.user!!.username == principal.name
         }
 
         return if (weightedCriteria.isEmpty()) {
@@ -121,9 +121,9 @@ internal class WeightedCriteriaController(private val weightedCriteriaRepository
 
         val weightedCriteriaLocal = weightedCriteriaRepository.findAll().filter {
             it.id == weightedCriteria.id &&
-                    it.selectionCriteria1.project!!.user!!.username == principal.name &&
-                    it.selectionCriteria2.project!!.user!!.username == principal.name &&
-                    it.selectedCriteria.project!!.user!!.username == principal.name
+                    it.selectionCriteria1.decision!!.user!!.username == principal.name &&
+                    it.selectionCriteria2.decision!!.user!!.username == principal.name &&
+                    it.selectedCriteria.decision!!.user!!.username == principal.name
         }
 
         if (weightedCriteriaLocal.isNotEmpty()) {
@@ -150,9 +150,9 @@ internal class WeightedCriteriaController(private val weightedCriteriaRepository
             var weightedCriteria = weightedCriteriaRepository.findByIdOrNull(it.id)
 
             if (weightedCriteria != null &&
-                    weightedCriteria.selectionCriteria1.project!!.user!!.username == principal.name &&
-                    weightedCriteria.selectionCriteria2.project!!.user!!.username == principal.name &&
-                    weightedCriteria.selectedCriteria.project!!.user!!.username == principal.name
+                    weightedCriteria.selectionCriteria1.decision!!.user!!.username == principal.name &&
+                    weightedCriteria.selectionCriteria2.decision!!.user!!.username == principal.name &&
+                    weightedCriteria.selectedCriteria.decision!!.user!!.username == principal.name
             ) {
                 weightedCriteria.weight = it.weight
                 weightedCriteriaRepository.save(weightedCriteria)

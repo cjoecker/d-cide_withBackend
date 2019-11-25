@@ -70,14 +70,17 @@ class UserController {
         return ResponseEntity(newUser, HttpStatus.CREATED)
     }
 
+
     @GetMapping("/unregistered")
-    fun getUnregisteredUsers(): ResponseEntity<*> {
+    fun createUnregisteredUsers(): ResponseEntity<*> {
 
-        val unregisteredUsers = userRepository.findAll().filter {
-            !it.registeredUser
-        }.count()
+        val jwt = userService.createUnregisteredUser()
 
-        return ResponseEntity(unregisteredUsers, HttpStatus.OK)
+        return if (jwt != null) {
+            ResponseEntity<Any>(JwtLoginSucessResponse(true, jwt), HttpStatus.OK)
+        } else {
+            ResponseEntity<Any>(null, HttpStatus.BAD_REQUEST)
+        }
     }
 
 }

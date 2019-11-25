@@ -1,12 +1,11 @@
 package com.dcide.dcide.control
 
 
-import com.dcide.dcide.model.ProjectRepository
+import com.dcide.dcide.model.DecisionsRepository
 import com.dcide.dcide.model.SelectionCriteria
 import com.dcide.dcide.model.SelectionCriteriaRepository
 import com.dcide.dcide.model.WeightedCriteriaRepository
 
-import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
@@ -14,8 +13,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 import javax.validation.Valid
-import java.net.URI
-import java.net.URISyntaxException
 import java.security.Principal
 
 
@@ -24,7 +21,7 @@ import java.security.Principal
 internal class SelectionCriteriaController(private val selectionCriteriaRepository: SelectionCriteriaRepository) {
 
     @Autowired
-    lateinit var projectRepository: ProjectRepository
+    lateinit var decisionsRepository: DecisionsRepository
 
     @Autowired
     lateinit var weightedCriteriaRepository: WeightedCriteriaRepository
@@ -34,7 +31,7 @@ internal class SelectionCriteriaController(private val selectionCriteriaReposito
 
         var result: MutableSet<SelectionCriteria>? = null
 
-        val project = projectRepository.findByIdOrNull(project_id)
+        val project = decisionsRepository.findByIdOrNull(project_id)
 
         if (project != null && project.user!!.username == principal.name) {
             result = project.selectionCriteria.sortedByDescending { it.id }.toMutableSet()
@@ -51,7 +48,7 @@ internal class SelectionCriteriaController(private val selectionCriteriaReposito
     fun getSelectionCriteria(@PathVariable criteria_id: Long, principal: Principal): ResponseEntity<*> {
 
         val selectionCriteria = selectionCriteriaRepository.findById(criteria_id).filter {
-            it.project!!.user!!.username == principal.name
+            it.decision!!.user!!.username == principal.name
         }
 
         return selectionCriteria.map { response -> ResponseEntity.ok().body(response) }
@@ -65,10 +62,10 @@ internal class SelectionCriteriaController(private val selectionCriteriaReposito
 
         var result: SelectionCriteria? = null
 
-        val project = projectRepository.findByIdOrNull(project_id)
+        val project = decisionsRepository.findByIdOrNull(project_id)
 
         if (project != null && project.user!!.username == principal.name) {
-            selectionCriteria.project = project
+            selectionCriteria.decision = project
             result = selectionCriteriaRepository.save(selectionCriteria)
         }
         return if (result != null) {
@@ -83,16 +80,16 @@ internal class SelectionCriteriaController(private val selectionCriteriaReposito
     fun deleteSelectionCriteria(@PathVariable criteria_id: Long, principal: Principal): ResponseEntity<*> {
 
         val selectionCriteria = selectionCriteriaRepository.findById(criteria_id).filter {
-            it.project!!.user!!.username == principal.name
+            it.decision!!.user!!.username == principal.name
         }.orElse(null)
 
         return if (selectionCriteria != null) {
 
             //Delete WeightedCriteria
             val weightedCriteriaToDelete = weightedCriteriaRepository.findAll().filter {
-                it.selectionCriteria1.project!!.user!!.username == principal.name &&
-                        it.selectionCriteria2.project!!.user!!.username == principal.name &&
-                        it.selectedCriteria.project!!.user!!.username == principal.name &&
+                it.selectionCriteria1.decision!!.user!!.username == principal.name &&
+                        it.selectionCriteria2.decision!!.user!!.username == principal.name &&
+                        it.selectedCriteria.decision!!.user!!.username == principal.name &&
                         (it.selectionCriteria1.id == criteria_id || it.selectionCriteria2.id == criteria_id)
             }
 
@@ -119,21 +116,21 @@ internal class SelectionCriteriaController(private val selectionCriteriaReposito
 
         //Get max sum of weighted criteria
         val weightSum = weightedCriteriaRepository.findAll().filter {
-            it.selectedCriteria.project!!.id == project_id &&
-                    it.selectedCriteria.project!!.user!!.username == principal.name
+            it.selectedCriteria.decision!!.id == project_id &&
+                    it.selectedCriteria.decision!!.user!!.username == principal.name
         }.sumBy { Math.abs(it.weight) }
 
 
         //Sum Values
         selectionCriteriaRepository.findAll().filter {
-            it.project!!.id == project_id &&
-                    it.project!!.user!!.username == principal.name
+            it.decision!!.id == project_id &&
+                    it.decision!!.user!!.username == principal.name
         }.forEach { selectionCriteria ->
 
             var score = weightedCriteriaRepository.findAll().filter {
                 it.selectedCriteria.id == selectionCriteria.id &&
-                it.selectionCriteria1.project!!.user!!.username == principal.name &&
-                        it.selectionCriteria2.project!!.user!!.username == principal.name
+                it.selectionCriteria1.decision!!.user!!.username == principal.name &&
+                        it.selectionCriteria2.decision!!.user!!.username == principal.name
             }.sumBy { Math.abs(it.weight) }.toDouble()
 
             //Make value 0.0 - 10.0 scale
@@ -145,8 +142,8 @@ internal class SelectionCriteriaController(private val selectionCriteriaReposito
         }
 
         return selectionCriteriaRepository.findAll().filter {
-            it.project!!.user!!.username == principal.name &&
-                    it.project!!.id == project_id
+            it.decision!!.user!!.username == principal.name &&
+                    it.decision!!.id == project_id
         }.sortedWith(compareBy { it.score }).reversed()
     }
 }

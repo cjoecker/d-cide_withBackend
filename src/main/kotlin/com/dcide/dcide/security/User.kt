@@ -1,7 +1,6 @@
 package com.dcide.dcide.security
 
-import com.dcide.dcide.model.DecisionOption
-import com.dcide.dcide.model.Project
+import com.dcide.dcide.model.Decision
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonIgnore
 import org.springframework.security.core.userdetails.UserDetails
@@ -9,7 +8,6 @@ import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.*
 import org.springframework.security.core.GrantedAuthority
-import javax.validation.Valid
 
 //Data Class cannot be used because getters and setter from UserDetails cannot be overwritten
 @Entity
@@ -53,7 +51,7 @@ data class User(
     //Child
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.REFRESH], mappedBy = "user", orphanRemoval = true)
     @JsonIgnore
-    val project: MutableSet<Project> = mutableSetOf()
+    val decision: MutableSet<Decision> = mutableSetOf()
 
     override fun getUsername(): String {
         return username

@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 import javax.validation.Valid
-import java.net.URISyntaxException
 
 
 import org.springframework.web.bind.annotation.GetMapping
@@ -26,7 +25,7 @@ internal class DecisionOptionController(private val decisionOptionRepository: De
 
 
     @Autowired
-    lateinit var projectRepository: ProjectRepository
+    lateinit var decisionsRepository: DecisionsRepository
 
     @Autowired
     lateinit var weightedCriteriaRepository: WeightedCriteriaRepository
@@ -46,7 +45,7 @@ internal class DecisionOptionController(private val decisionOptionRepository: De
 
         var result: MutableSet<DecisionOption>? = null
 
-        val project = projectRepository.findByIdOrNull(project_id)
+        val project = decisionsRepository.findByIdOrNull(project_id)
 
         if (project != null && project.user!!.username == principal.name) {
             result = project.decisionOption.sortedByDescending{ it.id }.toMutableSet()
@@ -63,7 +62,7 @@ internal class DecisionOptionController(private val decisionOptionRepository: De
     fun getDecisionOption(@PathVariable option_id: Long, principal : Principal): ResponseEntity<*> {
 
         val decisionOption = decisionOptionRepository.findById(option_id).filter{
-            it.project!!.user!!.username == principal.name
+            it.decision!!.user!!.username == principal.name
         }
 
         return decisionOption.map { response -> ResponseEntity.ok().body(response) }
@@ -77,10 +76,10 @@ internal class DecisionOptionController(private val decisionOptionRepository: De
 
         var result: DecisionOption? = null
 
-        val project = projectRepository.findByIdOrNull(project_id)
+        val project = decisionsRepository.findByIdOrNull(project_id)
 
         if (project != null && project.user!!.username == principal.name) {
-            decisionOption.project = project
+            decisionOption.decision = project
             result = decisionOptionRepository.save(decisionOption)
         }
         return if (result != null) {
@@ -95,7 +94,7 @@ internal class DecisionOptionController(private val decisionOptionRepository: De
     fun deleteDecisionOption(@PathVariable option_id: Long, principal : Principal): ResponseEntity<*> {
 
         val decisionOption = decisionOptionRepository.findById(option_id).filter{
-            it.project!!.user!!.username == principal.name
+            it.decision!!.user!!.username == principal.name
         }.orElse(null)
 
         return if(decisionOption != null){
@@ -115,22 +114,22 @@ internal class DecisionOptionController(private val decisionOptionRepository: De
 
         //Get total sum
         val weightSum =  weightedCriteriaRepository.findAll().filter {
-            it.selectedCriteria.project!!.id == project_id &&
-                    it.selectedCriteria.project!!.user!!.username == principal.name
+            it.selectedCriteria.decision!!.id == project_id &&
+                    it.selectedCriteria.decision!!.user!!.username == principal.name
         }.sumBy {abs(it.weight)}
 
 
         val decisionOptionRepositoryFiltered =  decisionOptionRepository.findAll().filter {
-                    it.project!!.user!!.username == principal.name &&
-                            it.project!!.id == project_id
+                    it.decision!!.user!!.username == principal.name &&
+                            it.decision!!.id == project_id
         }
 
         val ratedOptionRepositoryFiltered = ratedOptionRepository.findAll().filter {
-            it.decisionOption.project!!.user!!.username == principal.name &&
-                    it.selectionCriteria.project!!.user!!.username == principal.name &&
+            it.decisionOption.decision!!.user!!.username == principal.name &&
+                    it.selectionCriteria.decision!!.user!!.username == principal.name &&
 
-                    it.decisionOption.project!!.id == project_id &&
-                    it.selectionCriteria.project!!.id == project_id
+                    it.decisionOption.decision!!.id == project_id &&
+                    it.selectionCriteria.decision!!.id == project_id
         }
 
 
@@ -156,8 +155,8 @@ internal class DecisionOptionController(private val decisionOptionRepository: De
         }
 
         return decisionOptionRepository.findAll().filter{
-            it.project!!.user!!.username == principal.name &&
-            it.project!!.id == project_id
+            it.decision!!.user!!.username == principal.name &&
+            it.decision!!.id == project_id
         }.sortedWith(compareBy({ it.score }, { it.name})).reversed()
     }
 

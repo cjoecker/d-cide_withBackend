@@ -1,22 +1,38 @@
 package com.dcide.dcide.security
 
+import com.dcide.dcide.model.Decision
+import com.dcide.dcide.service.DecisionsService
 import org.springframework.stereotype.Service
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
-
-
-
+import java.util.*
 
 
 @Service
 class UserService {
 
     @Autowired
+    lateinit var decisionsService: DecisionsService
+
+    @Autowired
     lateinit  var userRepository: UserRepository
 
+    @Autowired
+    lateinit var authenticationManager: AuthenticationManager
+
+    @Autowired
+    lateinit var mapValidationErrorService: MapValidationErrorService
 
     @Autowired
     lateinit  var bCryptPasswordEncoder: BCryptPasswordEncoder
+
+    @Autowired
+    lateinit var tokenProvider: JwtTokenProvider
+
+
 
     fun saveUser(newUser: User): User {
 
@@ -37,5 +53,63 @@ class UserService {
 
         }
 
+    }
+
+    fun createUnregisteredUser():String?{
+
+        //Get number of unregistered users
+        val unregisteredUsersNum = userRepository.findAll().filter {
+            !it.registeredUser
+        }.count() + 1
+
+        //create new unregistered user
+        val password = UUID.randomUUID().toString().substring(0,15)
+
+        val newUser = User(
+                0,
+                false,
+                "$unregisteredUsersNum@UnregisteredUser.com",
+                "Unregistered User $unregisteredUsersNum",
+                password,
+                password,
+                Date(),
+                Date()
+        )
+
+        saveUser(newUser)
+
+        //create new decision
+        val newDecision = Decision(
+                null,
+                "Unregistered Decision",
+                Date(),
+                Date(),
+                null
+        )
+
+        val createdDecision = decisionsService.createDecision(newUser.username, newDecision)
+
+        //create example data
+        if (createdDecision != null) {
+            decisionsService.createExampleData(newUser.username, createdDecision)
+        }
+
+        //authenticate user
+        return authenticateUser(newUser.username, password)
+    }
+
+
+    fun authenticateUser(username: String, password: String): String? {
+
+        val authentication = authenticationManager.authenticate(
+                UsernamePasswordAuthenticationToken(
+                        username,
+                        password
+                )
+        )
+
+        SecurityContextHolder.getContext().authentication = authentication
+
+        return SecurityConstants.TOKEN_PREFIX + tokenProvider.generateToken(authentication)
     }
 }

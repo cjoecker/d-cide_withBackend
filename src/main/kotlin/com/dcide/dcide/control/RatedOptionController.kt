@@ -3,7 +3,6 @@ package com.dcide.dcide.control
 
 import com.dcide.dcide.model.*
 
-import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
@@ -11,14 +10,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 import javax.validation.Valid
-import java.net.URI
-import java.net.URISyntaxException
 import java.security.Principal
-
-import java.util.Optional
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
 
 
 @RestController
@@ -37,11 +29,11 @@ internal class RatedOptionController(private val ratedOptionRepository: RatedOpt
 
 
         val ratedOptions = ratedOptionRepository.findAll().filter {
-            it.decisionOption.project!!.user!!.username == principal.name &&
-                    it.selectionCriteria.project!!.user!!.username == principal.name &&
+            it.decisionOption.decision!!.user!!.username == principal.name &&
+                    it.selectionCriteria.decision!!.user!!.username == principal.name &&
 
-                    it.decisionOption.project!!.id == project_id &&
-                    it.selectionCriteria.project!!.id == project_id
+                    it.decisionOption.decision!!.id == project_id &&
+                    it.selectionCriteria.decision!!.id == project_id
         }
 
         return ResponseEntity<Any>(ratedOptions, HttpStatus.OK)
@@ -65,8 +57,8 @@ internal class RatedOptionController(private val ratedOptionRepository: RatedOpt
             return ResponseEntity<Any>(null, HttpStatus.BAD_REQUEST)
 
         //Check if parent objects are from other user
-        if (selectionCriteria.project!!.user!!.username != principal.name ||
-                decisionOption.project!!.user!!.username != principal.name) {
+        if (selectionCriteria.decision!!.user!!.username != principal.name ||
+                decisionOption.decision!!.user!!.username != principal.name) {
             return ResponseEntity<Any>(null, HttpStatus.BAD_REQUEST)
 
         }
@@ -118,8 +110,8 @@ internal class RatedOptionController(private val ratedOptionRepository: RatedOpt
                 return ResponseEntity<Any>(null, HttpStatus.BAD_REQUEST)
 
             //Check if parent objects are from other user
-            if (selectionCriteria.project!!.user!!.username != principal.name ||
-                    decisionOption.project!!.user!!.username != principal.name) {
+            if (selectionCriteria.decision!!.user!!.username != principal.name ||
+                    decisionOption.decision!!.user!!.username != principal.name) {
                 return ResponseEntity<Any>(null, HttpStatus.BAD_REQUEST)
             }
 
