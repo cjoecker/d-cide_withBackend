@@ -42,11 +42,7 @@ internal class DecisionsController(private val decisionsRepository: DecisionsRep
 
         val decisions  = decisionsService.getDecisions(principal.name)
 
-        return if (decisions.count() > 0) {
-            ResponseEntity<Any>(decisions, HttpStatus.OK)
-        } else {
-            ResponseEntity<Any>(null, HttpStatus.NOT_FOUND)
-        }
+        return ResponseEntity<Any>(decisions, HttpStatus.OK)
 
     }
 
@@ -56,11 +52,7 @@ internal class DecisionsController(private val decisionsRepository: DecisionsRep
 
         val decision  = decisionsService.getDecisionById(principal.name, decisionsId)
 
-        return if (decision != null) {
-            ResponseEntity<Any>(decision, HttpStatus.OK)
-        } else {
-            ResponseEntity<Any>(null, HttpStatus.NOT_FOUND)
-        }
+        return ResponseEntity<Any>(decision, HttpStatus.OK)
 
     }
 
@@ -86,37 +78,6 @@ internal class DecisionsController(private val decisionsRepository: DecisionsRep
             ResponseEntity<Any>(null, HttpStatus.OK)
         } else {
             ResponseEntity<Any>(null, HttpStatus.BAD_REQUEST)
-        }
-
-    }
-
-    @PostMapping("/createExampleData")
-    fun createExampleData(principal: Principal): ResponseEntity<*> {
-
-        val decisions = decisionsRepository.findAll().filter {
-            it.user!!.username == principal.name
-        }
-
-        if (decisions.count() == 1) {
-
-            //Create test decision options
-            Stream.of("House in pleasant street", "House in seldom seen avenue", "House in yellowsnow road").forEach { decisionOption ->
-                decisionOptionRepository.save(
-                        DecisionOption(0, decisionOption, 0.0, decisions[0])
-                )
-            }
-
-
-            //Create test selection criteria
-            Stream.of("Garden", "Kitchen", "Neighborhood", "Size").forEach { selectionCriteria ->
-                selectionCriteriaRepository.save(
-                        SelectionCriteria(0, selectionCriteria, 0.0, decisions[0])
-                )
-            }
-
-            return ResponseEntity<Any>(null, HttpStatus.CREATED)
-        } else {
-            return ResponseEntity<Any>(null, HttpStatus.METHOD_NOT_ALLOWED)
         }
 
     }
