@@ -1,5 +1,6 @@
 package com.dcide.dcide.security
 
+import com.dcide.dcide.model.User
 import org.springframework.stereotype.Component
 import org.springframework.validation.Errors
 import org.springframework.validation.Validator

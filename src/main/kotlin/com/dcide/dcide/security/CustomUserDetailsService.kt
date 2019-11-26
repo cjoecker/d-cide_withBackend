@@ -2,6 +2,8 @@
 
 package com.dcide.dcide.security
 
+import com.dcide.dcide.model.User
+import com.dcide.dcide.model.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService

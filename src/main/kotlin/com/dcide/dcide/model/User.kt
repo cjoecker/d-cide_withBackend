@@ -1,4 +1,4 @@
-package com.dcide.dcide.security
+package com.dcide.dcide.model
 
 import com.dcide.dcide.model.Decision
 import com.fasterxml.jackson.annotation.JsonFormat

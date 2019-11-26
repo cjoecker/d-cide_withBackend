@@ -1,7 +1,9 @@
-package com.dcide.dcide.security
+package com.dcide.dcide.service
 
 import com.dcide.dcide.model.Decision
-import com.dcide.dcide.service.DecisionsService
+import com.dcide.dcide.model.User
+import com.dcide.dcide.model.UserRepository
+import com.dcide.dcide.security.*
 import org.springframework.stereotype.Service
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.authentication.AuthenticationManager

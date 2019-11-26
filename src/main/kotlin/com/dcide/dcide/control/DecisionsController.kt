@@ -14,10 +14,9 @@ import java.net.URISyntaxException
 
 import org.springframework.web.bind.annotation.GetMapping
 import java.security.Principal
-import com.dcide.dcide.security.UserRepository
+import com.dcide.dcide.model.UserRepository
 import com.dcide.dcide.service.DecisionsService
 import org.springframework.beans.factory.annotation.Autowired
-import java.util.stream.Stream
 
 
 @RestController

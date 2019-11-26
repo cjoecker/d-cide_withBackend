@@ -26,15 +26,15 @@ internal class SelectionCriteriaController(private val selectionCriteriaReposito
     @Autowired
     lateinit var weightedCriteriaRepository: WeightedCriteriaRepository
 
-    @GetMapping("/every_selectionCriteria/{project_id}")
-    fun everySelectionCriteria(@PathVariable project_id: Long, principal: Principal): ResponseEntity<*> {
+    @GetMapping("/every_selectionCriteria/{decision_id}")
+    fun everySelectionCriteria(@PathVariable decision_id: Long, principal: Principal): ResponseEntity<*> {
 
         var result: MutableSet<SelectionCriteria>? = null
 
-        val project = decisionsRepository.findByIdOrNull(project_id)
+        val decision = decisionsRepository.findByIdOrNull(decision_id)
 
-        if (project != null && project.user!!.username == principal.name) {
-            result = project.selectionCriteria.sortedByDescending { it.id }.toMutableSet()
+        if (decision != null && decision.user!!.username == principal.name) {
+            result = decision.selectionCriteria.sortedByDescending { it.id }.toMutableSet()
         }
 
         return if (result != null) {
@@ -56,16 +56,16 @@ internal class SelectionCriteriaController(private val selectionCriteriaReposito
     }
 
 
-    @PostMapping("/selectionCriteria/{project_id}")
-    fun createSelectionCriteria(@PathVariable project_id: Long, @Valid @RequestBody selectionCriteria: SelectionCriteria,
+    @PostMapping("/selectionCriteria/{decision_id}")
+    fun createSelectionCriteria(@PathVariable decision_id: Long, @Valid @RequestBody selectionCriteria: SelectionCriteria,
                                 principal: Principal): ResponseEntity<*> {
 
         var result: SelectionCriteria? = null
 
-        val project = decisionsRepository.findByIdOrNull(project_id)
+        val decision = decisionsRepository.findByIdOrNull(decision_id)
 
-        if (project != null && project.user!!.username == principal.name) {
-            selectionCriteria.decision = project
+        if (decision != null && decision.user!!.username == principal.name) {
+            selectionCriteria.decision = decision
             result = selectionCriteriaRepository.save(selectionCriteria)
         }
         return if (result != null) {
@@ -104,26 +104,26 @@ internal class SelectionCriteriaController(private val selectionCriteriaReposito
 
     }
 
-    @GetMapping("/result/selectionCriteria/{project_id}")
-    fun selectionCriteriaSorted(@PathVariable project_id: Long, principal: Principal): Collection<SelectionCriteria> {
+    @GetMapping("/result/selectionCriteria/{decision_id}")
+    fun selectionCriteriaSorted(@PathVariable decision_id: Long, principal: Principal): Collection<SelectionCriteria> {
 
-        return weightCriteria(project_id, principal)
+        return weightCriteria(decision_id, principal)
 
     }
 
 
-    fun weightCriteria(project_id: Long, principal: Principal): Collection<SelectionCriteria> {
+    fun weightCriteria(decision_id: Long, principal: Principal): Collection<SelectionCriteria> {
 
         //Get max sum of weighted criteria
         val weightSum = weightedCriteriaRepository.findAll().filter {
-            it.selectedCriteria.decision!!.id == project_id &&
+            it.selectedCriteria.decision!!.id == decision_id &&
                     it.selectedCriteria.decision!!.user!!.username == principal.name
         }.sumBy { Math.abs(it.weight) }
 
 
         //Sum Values
         selectionCriteriaRepository.findAll().filter {
-            it.decision!!.id == project_id &&
+            it.decision!!.id == decision_id &&
                     it.decision!!.user!!.username == principal.name
         }.forEach { selectionCriteria ->
 
@@ -143,7 +143,7 @@ internal class SelectionCriteriaController(private val selectionCriteriaReposito
 
         return selectionCriteriaRepository.findAll().filter {
             it.decision!!.user!!.username == principal.name &&
-                    it.decision!!.id == project_id
+                    it.decision!!.id == decision_id
         }.sortedWith(compareBy { it.score }).reversed()
     }
 }

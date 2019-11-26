@@ -24,14 +24,14 @@ internal class WeightedCriteriaController(private val weightedCriteriaRepository
     lateinit var decisionsRepository: DecisionsRepository
 
 
-    @GetMapping("/every_weightedCriteria/{project_id}")
-    fun everyWeightedCriteria(@PathVariable project_id: Long, principal: Principal): ResponseEntity<*> {
+    @GetMapping("/every_weightedCriteria/{decision_id}")
+    fun everyWeightedCriteria(@PathVariable decision_id: Long, principal: Principal): ResponseEntity<*> {
 
 
         //Check user and decision id
-        val project = decisionsRepository.findByIdOrNull(project_id)
+        val decision = decisionsRepository.findByIdOrNull(decision_id)
 
-        if (project == null || project.user!!.username != principal.name) {
+        if (decision == null || decision.user!!.username != principal.name) {
             return ResponseEntity<Any>(null, HttpStatus.NOT_FOUND)
         }
 
@@ -43,7 +43,7 @@ internal class WeightedCriteriaController(private val weightedCriteriaRepository
 
         val selectionCriteriaList = selectionCriteriaRepository.findAll().filter {
             it.decision!!.user!!.username == principal.name &&
-                    it.decision!!.id == project_id
+                    it.decision!!.id == decision_id
         }
 
 //        weightedCriteriaRepository.deleteAll(weightedCriteriaOld)
@@ -85,8 +85,8 @@ internal class WeightedCriteriaController(private val weightedCriteriaRepository
         return ResponseEntity<Any>(weightedCriteriaRepository.findAll().filter {
             it.selectionCriteria1.decision!!.user!!.username == principal.name &&
                     it.selectionCriteria2.decision!!.user!!.username == principal.name &&
-                    it.selectionCriteria1.decision!!.id == project_id &&
-                    it.selectionCriteria2.decision!!.id == project_id
+                    it.selectionCriteria1.decision!!.id == decision_id &&
+                    it.selectionCriteria2.decision!!.id == decision_id
         }.shuffled(), HttpStatus.OK)
 
     }

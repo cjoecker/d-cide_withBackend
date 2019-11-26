@@ -1,6 +1,7 @@
-package com.dcide.dcide.security
+package com.dcide.dcide.model
 
 
+import com.dcide.dcide.model.User
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 

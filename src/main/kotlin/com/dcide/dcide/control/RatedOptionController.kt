@@ -24,16 +24,16 @@ internal class RatedOptionController(private val ratedOptionRepository: RatedOpt
     lateinit var decisionOptionRepository: DecisionOptionRepository
 
 
-    @GetMapping("/every_ratedOption/{project_id}")
-    fun getEveryRatedOption(@PathVariable project_id: Long, principal: Principal): ResponseEntity<*> {
+    @GetMapping("/every_ratedOption/{decision_id}")
+    fun getEveryRatedOption(@PathVariable decision_id: Long, principal: Principal): ResponseEntity<*> {
 
 
         val ratedOptions = ratedOptionRepository.findAll().filter {
             it.decisionOption.decision!!.user!!.username == principal.name &&
                     it.selectionCriteria.decision!!.user!!.username == principal.name &&
 
-                    it.decisionOption.decision!!.id == project_id &&
-                    it.selectionCriteria.decision!!.id == project_id
+                    it.decisionOption.decision!!.id == decision_id &&
+                    it.selectionCriteria.decision!!.id == decision_id
         }
 
         return ResponseEntity<Any>(ratedOptions, HttpStatus.OK)

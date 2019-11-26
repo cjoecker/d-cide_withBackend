@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*
 
 
 import java.security.Principal
-import com.dcide.dcide.security.UserRepository
+import com.dcide.dcide.model.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.stream.Stream
@@ -110,23 +110,23 @@ class DecisionsService(private val decisionsRepository: DecisionsRepository) {
 
     }
 
-    @PutMapping("/transferProjectToUser")
-    fun transferProject(@RequestBody username: String, principal: Principal): ResponseEntity<*> {
+    @PutMapping("/transferPecisionToUser")
+    fun transferPecision(@RequestBody username: String, principal: Principal): ResponseEntity<*> {
 
         var result: Decision? = null
 
         //get unregistered user from token
 
-        val project = decisionsRepository.findAll().filter {
+        val decision = decisionsRepository.findAll().filter {
             it.user!!.username == username
         }
 
-        if (project.count() == 1) {
+        if (decision.count() == 1) {
             val user = userRepository.findByUsername(principal.name)
 
-            project[0].user = user
+            decision[0].user = user
 
-            result = decisionsRepository.save(project[0])
+            result = decisionsRepository.save(decision[0])
         }
 
         return if (result != null) {

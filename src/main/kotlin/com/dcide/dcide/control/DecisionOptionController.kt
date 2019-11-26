@@ -40,15 +40,15 @@ internal class DecisionOptionController(private val decisionOptionRepository: De
     lateinit var selectionCriteriaController: SelectionCriteriaController
 
 
-    @GetMapping("/every_decisionOption/{project_id}")
-    fun everyDecisionOption(@PathVariable project_id : Long , principal : Principal): ResponseEntity<*>  {
+    @GetMapping("/every_decisionOption/{decision_id}")
+    fun everyDecisionOption(@PathVariable decision_id : Long , principal : Principal): ResponseEntity<*>  {
 
         var result: MutableSet<DecisionOption>? = null
 
-        val project = decisionsRepository.findByIdOrNull(project_id)
+        val decision = decisionsRepository.findByIdOrNull(decision_id)
 
-        if (project != null && project.user!!.username == principal.name) {
-            result = project.decisionOption.sortedByDescending{ it.id }.toMutableSet()
+        if (decision != null && decision.user!!.username == principal.name) {
+            result = decision.decisionOption.sortedByDescending{ it.id }.toMutableSet()
         }
 
         return if (result != null) {
@@ -70,16 +70,16 @@ internal class DecisionOptionController(private val decisionOptionRepository: De
     }
 
 
-    @PostMapping("/decisionOption/{project_id}")
-    fun createDecisionOption(@PathVariable project_id: Long, @Valid @RequestBody decisionOption: DecisionOption,
+    @PostMapping("/decisionOption/{decision_id}")
+    fun createDecisionOption(@PathVariable decision_id: Long, @Valid @RequestBody decisionOption: DecisionOption,
                              principal: Principal): ResponseEntity<*> {
 
         var result: DecisionOption? = null
 
-        val project = decisionsRepository.findByIdOrNull(project_id)
+        val decision = decisionsRepository.findByIdOrNull(decision_id)
 
-        if (project != null && project.user!!.username == principal.name) {
-            decisionOption.decision = project
+        if (decision != null && decision.user!!.username == principal.name) {
+            decisionOption.decision = decision
             result = decisionOptionRepository.save(decisionOption)
         }
         return if (result != null) {
@@ -106,30 +106,30 @@ internal class DecisionOptionController(private val decisionOptionRepository: De
 
     }
 
-    @GetMapping("/result/decisionOption/{project_id}")
-    fun decisionOptionSorted(@PathVariable project_id: Long, principal: Principal): Collection<DecisionOption> {
+    @GetMapping("/result/decisionOption/{decision_id}")
+    fun decisionOptionSorted(@PathVariable decision_id: Long, principal: Principal): Collection<DecisionOption> {
 
         //Sum weightedCriteria if it's not already summed
-        selectionCriteriaController.weightCriteria(project_id,principal)
+        selectionCriteriaController.weightCriteria(decision_id,principal)
 
         //Get total sum
         val weightSum =  weightedCriteriaRepository.findAll().filter {
-            it.selectedCriteria.decision!!.id == project_id &&
+            it.selectedCriteria.decision!!.id == decision_id &&
                     it.selectedCriteria.decision!!.user!!.username == principal.name
         }.sumBy {abs(it.weight)}
 
 
         val decisionOptionRepositoryFiltered =  decisionOptionRepository.findAll().filter {
                     it.decision!!.user!!.username == principal.name &&
-                            it.decision!!.id == project_id
+                            it.decision!!.id == decision_id
         }
 
         val ratedOptionRepositoryFiltered = ratedOptionRepository.findAll().filter {
             it.decisionOption.decision!!.user!!.username == principal.name &&
                     it.selectionCriteria.decision!!.user!!.username == principal.name &&
 
-                    it.decisionOption.decision!!.id == project_id &&
-                    it.selectionCriteria.decision!!.id == project_id
+                    it.decisionOption.decision!!.id == decision_id &&
+                    it.selectionCriteria.decision!!.id == decision_id
         }
 
 
@@ -156,7 +156,7 @@ internal class DecisionOptionController(private val decisionOptionRepository: De
 
         return decisionOptionRepository.findAll().filter{
             it.decision!!.user!!.username == principal.name &&
-            it.decision!!.id == project_id
+            it.decision!!.id == decision_id
         }.sortedWith(compareBy({ it.score }, { it.name})).reversed()
     }
 
