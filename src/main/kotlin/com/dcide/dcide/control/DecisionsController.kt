@@ -36,6 +36,8 @@ internal class DecisionsController(private val decisionsRepository: DecisionsRep
     @Autowired
     lateinit var decisionsService: DecisionsService
 
+
+    //opid-get-decisions
     @GetMapping("")
     fun getDecisions(principal: Principal): ResponseEntity<*>  {
 
@@ -46,6 +48,7 @@ internal class DecisionsController(private val decisionsRepository: DecisionsRep
     }
 
 
+    //opid-get-decisions-decisionId
     @GetMapping("/{decisionsId}")
     fun getDecision(@PathVariable decisionsId: Long, principal: Principal): ResponseEntity<*> {
 
@@ -55,21 +58,21 @@ internal class DecisionsController(private val decisionsRepository: DecisionsRep
 
     }
 
-
-    @PostMapping("")
+    //opid-post-decisions
+    @PostMapping("/")
     @Throws(URISyntaxException::class)
     fun createDecision(@Valid @RequestBody decision: Decision, principal: Principal): ResponseEntity<*> {
 
-        val decision  = decisionsService.createDecision(principal.name, decision)
+        val decision  = decisionsService.saveDecision(principal.name, decision)
 
         return if (decision != null) {
-            ResponseEntity<Any>(decision, HttpStatus.OK)
+            ResponseEntity<Any>(decision, HttpStatus.CREATED)
         } else {
             ResponseEntity<Any>(null, HttpStatus.BAD_REQUEST)
         }
     }
 
-
+    //opid-delete-decisions-{decisionId}
     @DeleteMapping("/{decisionsId}")
     fun deleteDecision(@PathVariable decisionsId: Long, principal: Principal): ResponseEntity<*> {
 
@@ -81,32 +84,20 @@ internal class DecisionsController(private val decisionsRepository: DecisionsRep
 
     }
 
-    @PutMapping("/transferDecisionToUser")
-    fun transferDecision(@RequestBody username: String, principal: Principal): ResponseEntity<*> {
+    //opid-put-decisions
+    @PutMapping("/")
+    @Throws(URISyntaxException::class)
+    fun updateDecision(@Valid @RequestBody decision: Decision, principal: Principal): ResponseEntity<*> {
 
-        var result: Decision? = null
+        val decision  = decisionsService.saveDecision(principal.name, decision)
 
-        //get unregistered user from token
-
-        val decision = decisionsRepository.findAll().filter {
-            it.user!!.username == username
-        }
-
-        if (decision.count() == 1) {
-            val user = userRepository.findByUsername(principal.name)
-
-            decision[0].user = user
-
-            result = decisionsRepository.save(decision[0])
-        }
-
-        return if (result != null) {
-            ResponseEntity<Any>(result, HttpStatus.CREATED)
+        return if (decision != null) {
+            ResponseEntity<Any>(decision, HttpStatus.OK)
         } else {
-            ResponseEntity<Any>(null, HttpStatus.NOT_FOUND)
+            ResponseEntity<Any>(null, HttpStatus.BAD_REQUEST)
         }
-
     }
+
 
 
 }

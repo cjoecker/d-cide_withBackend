@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.*
 
 
 @RestController
-@RequestMapping("/api/users")
-class UserController {
+@RequestMapping("/api/sessions")
+class SessionsController {
 
     @Autowired
     lateinit var mapValidationErrorService: MapValidationErrorService
@@ -26,58 +26,31 @@ class UserController {
     @Autowired
     lateinit var userService: UserService
 
-    @Autowired
-    lateinit var userValidator: UserValidator
 
-    @Autowired
-    lateinit var tokenProvider: JwtTokenProvider
-
-    @Autowired
-    lateinit var authenticationManager: AuthenticationManager
-
-    @Autowired
-    lateinit var userRepository: UserRepository
-
-    @PostMapping("/logIn")
+    //opid-post-sessions
+    @PostMapping("/")
     fun authenticateUser(@Valid @RequestBody loginRequest: LoginRequest, result: BindingResult): ResponseEntity<*> {
         val errorMap = mapValidationErrorService.MapValidationService(result)
         if (errorMap != null) return errorMap
 
-        val authentication = authenticationManager.authenticate(
-                UsernamePasswordAuthenticationToken(
-                        loginRequest.username,
-                        loginRequest.password
-                )
-        )
+        val jwt = userService.getJWTToken(userService.authenticateUser(loginRequest.username, loginRequest.password))
 
-        SecurityContextHolder.getContext().authentication = authentication
-        val jwt = TOKEN_PREFIX + tokenProvider.generateToken(authentication)
-
-        return ResponseEntity.ok<Any>(JwtLoginSucessResponse(true, jwt))
+        return if (jwt != null) {
+            ResponseEntity<Any>(JwtLoginSucessResponse(true, jwt), HttpStatus.CREATED)
+        } else {
+            ResponseEntity<Any>(null, HttpStatus.BAD_REQUEST)
+        }
     }
 
 
-    @PostMapping("/signUp")
-    fun signUpUser(@Valid @RequestBody user: User, result: BindingResult): ResponseEntity<*> {
-
-        userValidator.validate(user,result)
-
-        val errorMap = mapValidationErrorService.MapValidationService(result)
-        if (errorMap != null) return errorMap
-
-        val newUser = userService.saveUser(user)
-
-        return ResponseEntity(newUser, HttpStatus.CREATED)
-    }
-
-
-    @GetMapping("/unregistered")
+    //opid-get-sessions-unregistered
+    @PostMapping("/unregistered")
     fun createUnregisteredUsers(): ResponseEntity<*> {
 
         val jwt = userService.createUnregisteredUser()
 
         return if (jwt != null) {
-            ResponseEntity<Any>(JwtLoginSucessResponse(true, jwt), HttpStatus.OK)
+            ResponseEntity<Any>(JwtLoginSucessResponse(true, jwt), HttpStatus.CREATED)
         } else {
             ResponseEntity<Any>(null, HttpStatus.BAD_REQUEST)
         }

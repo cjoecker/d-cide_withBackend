@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<decision xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
@@ -12,7 +12,7 @@
     <artifactId>d-cide</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>d-cide</name>
-    <description>Demo decision for Spring Boot</description>
+    <description>Demo project for Spring Boot</description>
 
     <properties>
         <java.version>1.8</java.version>
@@ -87,8 +87,8 @@
     </dependencies>
 
     <build>
-        <sourceDirectory>${decision.basedir}/src/main/kotlin</sourceDirectory>
-        <testSourceDirectory>${decision.basedir}/src/test/kotlin</testSourceDirectory>
+        <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
+        <testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -140,8 +140,8 @@
                         <phase>generate-resources</phase>
                         <configuration>
                             <target>
-                                <copy todir="${decision.build.directory}/classes/public">
-                                    <fileset dir="${decision.basedir}/frontend/build"/>
+                                <copy todir="${project.build.directory}/classes/public">
+                                    <fileset dir="${project.basedir}/frontend/build"/>
                                 </copy>
                             </target>
                         </configuration>
@@ -179,4 +179,4 @@
         </plugins>
     </build>
 
-</decision>
+</project>

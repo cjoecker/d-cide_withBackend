@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import java.util.*
@@ -89,7 +90,7 @@ class UserService {
                 null
         )
 
-        val createdDecision = decisionsService.createDecision(newUser.username, newDecision)
+        val createdDecision = decisionsService.saveDecision(newUser.username, newDecision)
 
         //create example data
         if (createdDecision != null) {
@@ -97,21 +98,27 @@ class UserService {
         }
 
         //authenticate user
-        return authenticateUser(newUser.username, password)
+        return getJWTToken(authenticateUser(newUser.username, password))
     }
 
 
-    fun authenticateUser(username: String, password: String): String? {
+    fun authenticateUser(username: String, password: String): Authentication {
 
-        val authentication = authenticationManager.authenticate(
+        return authenticationManager.authenticate(
                 UsernamePasswordAuthenticationToken(
                         username,
                         password
                 )
         )
+    }
+
+
+    fun getJWTToken(authentication : Authentication) : String?{
 
         SecurityContextHolder.getContext().authentication = authentication
 
         return SecurityConstants.TOKEN_PREFIX + tokenProvider.generateToken(authentication)
+
     }
+
 }

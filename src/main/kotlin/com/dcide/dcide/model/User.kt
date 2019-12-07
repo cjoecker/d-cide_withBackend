@@ -3,6 +3,7 @@ package com.dcide.dcide.model
 import com.dcide.dcide.model.Decision
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonProperty
 import org.springframework.security.core.userdetails.UserDetails
 import java.util.*
 import javax.persistence.*
@@ -16,20 +17,23 @@ data class User(
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         var  id: Long  = 0,
 
-        var registeredUser: Boolean = false,
+        @JsonIgnore
+        var registeredUser: Boolean = true,
 
         @field:NotEmpty (message = "Valid email is required")
         @field:Email(message = "Valid email is required")
         @Column(unique = true)
-        private var username: String = "",
+        internal var username: String = "",
 
         @field:NotBlank(message = "Full name is required")
         var  fullName: String = "",
 
         @field:NotBlank(message = "Password is required")
+        @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
         private var password: String = "",
 
         @Transient
+        @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
         var confirmPassword: String = "",
 
         @JsonFormat(pattern = "dd.MM.yyyy HH:mm:ss")

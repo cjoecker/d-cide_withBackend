@@ -3,13 +3,6 @@ package com.dcide.dcide.service
 
 import com.dcide.dcide.model.*
 
-
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
-
-
-import java.security.Principal
 import com.dcide.dcide.model.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -21,6 +14,9 @@ class DecisionsService(private val decisionsRepository: DecisionsRepository) {
 
     @Autowired
     lateinit var userRepository: UserRepository
+
+    @Autowired
+    lateinit var userService: UserService
 
     @Autowired
     lateinit var decisionOptionRepository: DecisionOptionRepository
@@ -51,15 +47,23 @@ class DecisionsService(private val decisionsRepository: DecisionsRepository) {
     }
 
 
-    fun createDecision(username: String, decision: Decision): Decision? {
+    fun saveDecision(username: String, decision: Decision): Decision? {
 
         //Authenticate Decision
         if (decision.id != null && getDecisionById(username, decision.id) == null)
             return null
 
-        //Save decision
-        val user = userRepository.findByUsername(username)
-        decision.user = user
+
+        if(decision.user == null){
+            //Save to user
+            decision.user = userRepository.findByUsername(username)
+        }else{
+            //Transfer to user
+            if(userService.authenticateUser(decision.user!!.username, decision.user!!.password).isAuthenticated){
+                decision.user = userRepository.findByUsername(decision.user!!.username)
+           }
+        }
+
         return decisionsRepository.save(decision)
     }
 
@@ -110,32 +114,7 @@ class DecisionsService(private val decisionsRepository: DecisionsRepository) {
 
     }
 
-    @PutMapping("/transferPecisionToUser")
-    fun transferPecision(@RequestBody username: String, principal: Principal): ResponseEntity<*> {
 
-        var result: Decision? = null
-
-        //get unregistered user from token
-
-        val decision = decisionsRepository.findAll().filter {
-            it.user!!.username == username
-        }
-
-        if (decision.count() == 1) {
-            val user = userRepository.findByUsername(principal.name)
-
-            decision[0].user = user
-
-            result = decisionsRepository.save(decision[0])
-        }
-
-        return if (result != null) {
-            ResponseEntity<Any>(result, HttpStatus.CREATED)
-        } else {
-            ResponseEntity<Any>(null, HttpStatus.NOT_FOUND)
-        }
-
-    }
 
 
 }

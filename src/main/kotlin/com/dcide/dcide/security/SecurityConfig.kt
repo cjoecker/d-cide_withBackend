@@ -1,6 +1,7 @@
 package com.dcide.dcide.security
 
 import com.dcide.dcide.security.SecurityConstants.H2_URL
+import com.dcide.dcide.security.SecurityConstants.LOGIN_URLS
 import com.dcide.dcide.security.SecurityConstants.SIGN_UP_URLS
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
@@ -81,6 +82,7 @@ class SecurityConfig: WebSecurityConfigurerAdapter() {
                         "/**/*.js"
                 ).permitAll()
                 .antMatchers(SIGN_UP_URLS).permitAll()
+                .antMatchers(LOGIN_URLS).permitAll()
                 .antMatchers(H2_URL).permitAll()
                 .anyRequest().authenticated()
 
