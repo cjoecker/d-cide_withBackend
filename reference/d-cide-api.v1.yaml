@@ -1,0 +1,467 @@
+openapi: 3.0.0
+info:
+  title: d-cide api
+  version: '1.0'
+  contact:
+    name: Christian Jöcker
+    email: kontakt@cjoecker.de
+servers:
+  - url: API
+paths:
+  /decisions:
+    get:
+      summary: get list of all decisions
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: number
+                  name:
+                    type: string
+              examples:
+                Example:
+                  value:
+                    - id: 1
+                      name: Very important decisions
+                    - id: 2
+                      name: Just another decisions
+      operationId: opid-get-decisions
+      description: ''
+      tags:
+        - Decisions
+  '/decisions/{decisionId}/decisionOptions':
+    parameters:
+      - type: string
+        name: decisionId
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags:
+        - Decision Options
+      responses: {}
+      description: ''
+  '/decisions/{decisionId}/decisionOptions/{decisionOptionId}':
+    parameters:
+      - type: string
+        name: decisionId
+        in: path
+        required: true
+      - type: string
+        name: decisionOptionId
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags:
+        - Decision Options
+      responses: {}
+    post:
+      summary: ''
+      responses:
+        '200':
+          description: OK
+    put:
+      summary: ''
+      responses:
+        '200':
+          description: OK
+    delete:
+      summary: ''
+      responses:
+        '200':
+          description: OK
+  '/decisions/{decisionId}/selectionCriteria':
+    parameters:
+      - type: string
+        name: decisionId
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags:
+        - Selection Criteria
+      responses: {}
+  '/decisions/{decisionId}/selectionCriteria/{selectionCriteriaId}':
+    parameters:
+      - type: string
+        name: decisionId
+        in: path
+        required: true
+      - type: string
+        name: selectionCriteriaId
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags:
+        - Selection Criteria
+      responses: {}
+    post:
+      summary: ''
+      responses:
+        '200':
+          description: OK
+    put:
+      summary: ''
+      responses:
+        '200':
+          description: OK
+    delete:
+      summary: ''
+      responses:
+        '200':
+          description: OK
+  '/decisions/{decisionId}/weightedCriteria':
+    parameters:
+      - type: string
+        name: decisionId
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses: {}
+    post:
+      summary: ''
+      responses:
+        '200':
+          description: OK
+  '/decisions/{decisionId}/weightedCriteria/{weightedCriteriaId}':
+    parameters:
+      - type: string
+        name: decisionId
+        in: path
+        required: true
+      - type: string
+        name: weightedCriteriaId
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses: {}
+    post:
+      summary: ''
+      responses:
+        '200':
+          description: OK
+  '/decisions/{decisionId}/ratedOptions':
+    parameters:
+      - type: string
+        name: decisionId
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses: {}
+  '/decisions/{decisionId}/ratedOptions/{ratedOptionId}':
+    parameters:
+      - type: string
+        name: decisionId
+        in: path
+        required: true
+      - type: string
+        name: ratedOptionId
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses: {}
+    post:
+      summary: ''
+      responses:
+        '200':
+          description: OK
+    put:
+      summary: ''
+      responses:
+        '200':
+          description: OK
+    delete:
+      summary: ''
+      responses:
+        '200':
+          description: OK
+  '/decisions/{decisionId}/decisionOptions/results':
+    parameters:
+      - type: string
+        name: decisionId
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      responses: {}
+      tags:
+        - Decision Options
+        - Results
+  '/decisions/{decisionId}/selectionCriteria/results':
+    parameters:
+      - type: string
+        name: decisionId
+        in: path
+        required: true
+        tags:
+          - Results
+          - Selection Criteria
+    get:
+      summary: Your GET endpoint
+      responses: {}
+  /decisions/:
+    post:
+      summary: post new decision
+      operationId: opid-post-decisions
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: number
+                  name:
+                    type: string
+              examples:
+                Example:
+                  value:
+                    id: 1
+                    name: very important decision
+      description: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+              required:
+                - name
+            examples:
+              Example:
+                value:
+                  name: Very important decision
+      tags:
+        - Decisions
+    put:
+      summary: put new decision
+      operationId: opid-put-decisions
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: number
+                  name:
+                    type: string
+              examples:
+                Example:
+                  value:
+                    id: 1
+                    name: Very important decision
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: number
+                name:
+                  type: string
+                user:
+                  type: object
+                  description: 'user is sent, when the user of a decision wants to be changed (e.g. from an unregistered to a registered user)'
+                  properties:
+                    username:
+                      type: string
+                    password:
+                      type: string
+              required:
+                - id
+                - name
+            examples:
+              Example:
+                value:
+                  id: 1
+                  name: Very important decision
+                  user:
+                    username: peter@parker.com
+                    password: spiderman
+      tags:
+        - Decisions
+  '/decisions/{decisionId}':
+    get:
+      summary: get one decision
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: number
+                  name:
+                    type: string
+              examples:
+                Example:
+                  value:
+                    id: 1
+                    name: Very important decision
+      description: ''
+      parameters: []
+      operationId: opid-get-decisions-decisionId
+      requestBody: {}
+      tags:
+        - Decisions
+    parameters:
+      - schema:
+          type: string
+        name: decisionId
+        in: path
+        required: true
+    delete:
+      summary: delete one decision
+      operationId: 'opid-delete-decisions-{decisionId}'
+      responses:
+        '200':
+          description: OK
+      requestBody: {}
+      tags:
+        - Decisions
+  /users/:
+    post:
+      summary: create user (user signup)
+      tags:
+        - Users
+      responses:
+        '201':
+          description: Created
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type:
+                      - string
+                      - number
+                  username:
+                    type: string
+                  fullName:
+                    type: string
+      operationId: opid-post-users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: Email
+                fullName:
+                  type: string
+                password:
+                  type: string
+                confirmPassword:
+                  type: string
+              required:
+                - username
+                - fullName
+                - password
+                - confirmPassword
+            examples:
+              Example:
+                value:
+                  username: peter@parker.com
+                  fullName: Peter Parker
+                  registeredUser: 'true'
+                  password: spiderman
+                  confirmPassword: spiderman
+      description: ''
+  /sessions/:
+    post:
+      summary: create session (user login)
+      operationId: post-sessions
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  token:
+                    type: string
+              examples:
+                Example:
+                  value:
+                    success: true
+                    token: Bearer eyJhbGciOiJIUzUxMiaa.eyJyZWdpc3RlcmVkVXNlciI6dHJ1ZSwiZnVsbE5hbWUiOiJjaHJpc3RpYW4gam9lY2tlciIsImlkIjoxNSwiZXhwIjoxNTc1NTE4NzkzLCJpYXQiOjE1NzUyMTg3OTMsInVzZXJuYW1lIjoiY2hyaXN0aWFuQGpvZWNrZXIuY29tIn0.tqHjiM8OeR59EXm2kKEAzueWH-cc8pW447b0pqXi9ibpaRqdCXFcb55Gcm0f7AkDMb2gDjfE_3JZhXMaGs7g
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+              required:
+                - username
+                - password
+            examples:
+              Example:
+                value:
+                  username: peter@parker.com
+                  password: spiderman
+        description: ''
+      description: ''
+      tags:
+        - Users
+  /sessions/unregistered:
+    post:
+      summary: create unregistered user (create anonym user)
+      tags:
+        - Users
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  token:
+                    type: string
+              examples:
+                Example:
+                  value:
+                    success: true
+                    token: Bearer eyJhbGciOiJIUzUxMiJ9.eyJyZWdpc3RlbbVkVXNlciI6ZmFsc2UsImZ1bGxOYW1lIjoiVW5yZWdpc3RlcmVkIFVzZXIgNzAiLCJpZCI6MTAyLCJleHAiOjE1NzU1MTk0NTQsImlhdCI6MTU3NTIxOTQ1NCwidXNlcm5hbWUiOiI3MEBVbnJlZ2lzdGVyZWRVc2VyLmNvbSJ9.Ff3p8ZW4FWXYUvzLXg3gNYWb101Ffm8rA9nnaU-6z8RUygAtxE1avgf91Vn9Uuz0YlA_toJi0HnSuyq6CVwNwQ
+      operationId: opid-get-sessions-unregistered
+components:
+  schemas: {}
