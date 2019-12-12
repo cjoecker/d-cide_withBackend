@@ -31,7 +31,7 @@ class DecisionsService(private val decisionsRepository: DecisionsRepository) {
     fun getDecisions(username: String): Iterable<Decision> {
 
         val decisions = decisionsRepository.findAll().filter {
-            it.user!!.username == username
+            it.user?.username == username
         }
 
         return decisions.toList().sortedByDescending { it.id }
@@ -40,7 +40,7 @@ class DecisionsService(private val decisionsRepository: DecisionsRepository) {
     fun getDecisionById(username: String, id: Long): Decision? {
 
         val decisions = decisionsRepository.findById(id).filter {
-            it.user!!.username == username
+            it.user?.username == username
         }.orElse(null)
 
         return decisions
@@ -76,9 +76,9 @@ class DecisionsService(private val decisionsRepository: DecisionsRepository) {
 
             //Delete Selection Criteria
             val weightedCriterias = weightedCriteriaRepository.findAll().filter {
-                it.selectedCriteria.decision!!.id == decisionsId &&
-                        it.selectionCriteria1.decision!!.id == decisionsId &&
-                        it.selectionCriteria2.decision!!.id == decisionsId
+                it.selectedCriteria.decision?.id == decisionsId &&
+                        it.selectionCriteria1.decision?.id == decisionsId &&
+                        it.selectionCriteria2.decision?.id == decisionsId
             }
 
             weightedCriteriaRepository.deleteAll(weightedCriterias)
