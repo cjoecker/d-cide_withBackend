@@ -41,10 +41,34 @@ paths:
         in: path
         required: true
     get:
-      summary: Your GET endpoint
+      summary: get list of all decision options
       tags:
         - Decision Options
-      responses: {}
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: number
+                    name:
+                      type: string
+                    score:
+                      type: number
+              examples:
+                Examle:
+                  value:
+                    - id: 1
+                      name: To be
+                      score: 0
+                    - id: 2
+                      name: Not to be
+                      score: 0
       description: ''
   '/decisions/{decisionId}/decisionOptions/{decisionOptionId}':
     parameters:
@@ -56,26 +80,94 @@ paths:
         name: decisionOptionId
         in: path
         required: true
-    get:
-      summary: Your GET endpoint
+    post:
+      summary: create one decision option
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: number
+                  name:
+                    type: string
+                  score:
+                    type: number
+              examples:
+                Example:
+                  value:
+                    id: 1
+                    name: To be
+                    score: 0
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+              required:
+                - name
+            examples:
+              Example:
+                value:
+                  name: To be
       tags:
         - Decision Options
-      responses: {}
-    post:
-      summary: ''
-      responses:
-        '200':
-          description: OK
+      operationId: ''
     put:
-      summary: ''
+      summary: edit one decision option
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: number
+                  name:
+                    type: string
+                  score:
+                    type: number
+              examples:
+                Example:
+                  value:
+                    id: 1
+                    name: Not to be
+                    score: 0
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: number
+                name:
+                  type: string
+              required:
+                - id
+                - name
+            examples:
+              Example:
+                value:
+                  id: 1
+                  name: Not to be
+      tags:
+        - Decision Options
     delete:
-      summary: ''
+      summary: delete one decision option
       responses:
         '200':
           description: OK
+      tags:
+        - Decision Options
   '/decisions/{decisionId}/selectionCriteria':
     parameters:
       - type: string
@@ -253,7 +345,7 @@ paths:
       tags:
         - Decisions
     put:
-      summary: put new decision
+      summary: edit decision
       operationId: opid-put-decisions
       responses:
         '200':
