@@ -14,8 +14,7 @@ import java.net.URISyntaxException
 
 import org.springframework.web.bind.annotation.GetMapping
 import java.security.Principal
-import com.dcide.dcide.model.UserRepository
-import com.dcide.dcide.service.DecisionsService
+import com.dcide.dcide.service.DecisionService
 import org.springframework.beans.factory.annotation.Autowired
 
 
@@ -25,14 +24,14 @@ import org.springframework.beans.factory.annotation.Autowired
 internal class DecisionsController(private val decisionRepository: DecisionRepository) {
 
     @Autowired
-    lateinit var decisionsService: DecisionsService
+    lateinit var decisionService: DecisionService
 
 
     //opid-get-decisions
     @GetMapping("")
     fun getDecisions(principal: Principal): ResponseEntity<*>  {
 
-        val decisions  = decisionsService.getDecisions(principal.name)
+        val decisions  = decisionService.getDecisions(principal.name)
 
         return ResponseEntity<Any>(decisions, HttpStatus.OK)
 
@@ -43,7 +42,7 @@ internal class DecisionsController(private val decisionRepository: DecisionRepos
     @GetMapping("/{decisionsId}")
     fun getDecision(@PathVariable decisionsId: Long, principal: Principal): ResponseEntity<*> {
 
-        val decision  = decisionsService.getDecisionById(principal.name, decisionsId)
+        val decision  = decisionService.getDecisionById(principal.name, decisionsId)
 
         return ResponseEntity<Any>(decision, HttpStatus.OK)
 
@@ -54,7 +53,7 @@ internal class DecisionsController(private val decisionRepository: DecisionRepos
     @Throws(URISyntaxException::class)
     fun createDecision(@Valid @RequestBody decision: Decision, principal: Principal): ResponseEntity<*> {
 
-        val decision  = decisionsService.saveDecision(principal.name, decision)
+        val decision  = decisionService.saveDecision(principal.name, decision)
 
         return if (decision != null) {
             ResponseEntity<Any>(decision, HttpStatus.CREATED)
@@ -67,7 +66,7 @@ internal class DecisionsController(private val decisionRepository: DecisionRepos
     @DeleteMapping("/{decisionsId}")
     fun deleteDecision(@PathVariable decisionsId: Long, principal: Principal): ResponseEntity<*> {
 
-        return if (decisionsService.deleteDecision(principal.name, decisionsId)) {
+        return if (decisionService.deleteDecision(principal.name, decisionsId)) {
             ResponseEntity<Any>(null, HttpStatus.OK)
         } else {
             ResponseEntity<Any>(null, HttpStatus.NOT_FOUND)
@@ -80,7 +79,7 @@ internal class DecisionsController(private val decisionRepository: DecisionRepos
     @Throws(URISyntaxException::class)
     fun updateDecision(@Valid @RequestBody decision: Decision, principal: Principal): ResponseEntity<*> {
 
-        val decision  = decisionsService.saveDecision(principal.name, decision)
+        val decision  = decisionService.saveDecision(principal.name, decision)
 
         return if (decision != null) {
             ResponseEntity<Any>(decision, HttpStatus.OK)

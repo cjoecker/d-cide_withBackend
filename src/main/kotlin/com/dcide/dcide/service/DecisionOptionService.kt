@@ -3,29 +3,14 @@ package com.dcide.dcide.service
 
 import com.dcide.dcide.model.*
 import org.springframework.beans.factory.annotation.Autowired
-
-
 import org.springframework.stereotype.Service
 
 
 @Service
-internal class DecisionOptionsService(private val decisionOptionRepository: DecisionOptionRepository) {
-
-
-    @Autowired
-    lateinit var decisionRepository: DecisionRepository
+internal class DecisionOptionService(private val decisionOptionRepository: DecisionOptionRepository) {
 
     @Autowired
-    lateinit var weightedCriteriaRepository: WeightedCriteriaRepository
-
-    @Autowired
-    lateinit var ratedOptionRepository: RatedOptionRepository
-
-    @Autowired
-    lateinit var selectionCriteriaRepository: SelectionCriteriaRepository
-
-    @Autowired
-    lateinit var decisionsService: DecisionsService
+    lateinit var decisionService: DecisionService
 
     fun getDecisionOptions(username: String, decisionId: Long): Iterable<DecisionOption> {
 
@@ -49,7 +34,7 @@ internal class DecisionOptionsService(private val decisionOptionRepository: Deci
     fun saveDecisionOption(username: String, decisionId: Long, decisionOption: DecisionOption): DecisionOption? {
 
         //Authenticate Decision
-        val decisionLocal  = decisionsService.getDecisionById(username, decisionId)
+        val decisionLocal  = decisionService.getDecisionById(username, decisionId)
 
         if (decisionLocal != null && decisionLocal.user?.username != username)
             return null

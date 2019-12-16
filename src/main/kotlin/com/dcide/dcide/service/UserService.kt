@@ -18,7 +18,7 @@ import java.util.*
 class UserService {
 
     @Autowired
-    lateinit var decisionsService: DecisionsService
+    lateinit var decisionService: DecisionService
 
     @Autowired
     lateinit  var userRepository: UserRepository
@@ -90,11 +90,11 @@ class UserService {
                 null
         )
 
-        val createdDecision = decisionsService.saveDecision(newUser.username, newDecision)
+        val createdDecision = decisionService.saveDecision(newUser.username, newDecision)
 
         //create example data
         if (createdDecision != null) {
-            decisionsService.createExampleData(newUser.username, createdDecision)
+            decisionService.createExampleData(newUser.username, createdDecision)
         }
 
         //authenticate user

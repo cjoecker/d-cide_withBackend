@@ -1,10 +1,8 @@
 package com.dcide.dcide.control
 
 
-import com.dcide.dcide.model.DecisionRepository
-import com.dcide.dcide.model.SelectionCriteria
-import com.dcide.dcide.model.SelectionCriteriaRepository
-import com.dcide.dcide.model.WeightedCriteriaRepository
+import com.dcide.dcide.model.*
+import com.dcide.dcide.service.SelectionCriteriaService
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
@@ -17,97 +15,74 @@ import java.security.Principal
 
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/decisions/{decisionId}/selectionCriteria")
 internal class SelectionCriteriaController(private val selectionCriteriaRepository: SelectionCriteriaRepository) {
-
-    @Autowired
-    lateinit var decisionRepository: DecisionRepository
 
     @Autowired
     lateinit var weightedCriteriaRepository: WeightedCriteriaRepository
 
-    @GetMapping("/every_selectionCriteria/{decision_id}")
-    fun everySelectionCriteria(@PathVariable decision_id: Long, principal: Principal): ResponseEntity<*> {
+    @Autowired
+    lateinit var selectionCriteriaService: SelectionCriteriaService
 
-        var result: MutableSet<SelectionCriteria>? = null
 
-        val decision = decisionRepository.findByIdOrNull(decision_id)
+    @GetMapping("")
+    fun everySelectionCriteria(@PathVariable decisionId: Long, principal: Principal): ResponseEntity<*> {
 
-        if (decision != null && decision.user!!.username == principal.name) {
-            result = decision.selectionCriteria.sortedByDescending { it.id }.toMutableSet()
-        }
+        val decisions = selectionCriteriaService.getSelectionCriteria(principal.name, decisionId)
 
-        return if (result != null) {
-            ResponseEntity<Any>(result, HttpStatus.OK)
+        return ResponseEntity<Any>(decisions, HttpStatus.OK)
+    }
+
+    @GetMapping("/{optionId}")
+    fun getSelectionCriteria(@PathVariable decisionId: Long, @PathVariable optionId: Long, principal: Principal): ResponseEntity<*> {
+
+        val selectionCriteria = selectionCriteriaService.getSelectionCriteriaById(principal.name, decisionId, optionId)
+
+        return if (selectionCriteria != null) {
+            ResponseEntity<Any>(selectionCriteria, HttpStatus.CREATED)
         } else {
             ResponseEntity<Any>(null, HttpStatus.NOT_FOUND)
         }
     }
 
-    @GetMapping("/selectionCriteria/{criteria_id}")
-    fun getSelectionCriteria(@PathVariable criteria_id: Long, principal: Principal): ResponseEntity<*> {
 
-        val selectionCriteria = selectionCriteriaRepository.findById(criteria_id).filter {
-            it.decision!!.user!!.username == principal.name
-        }
+    @PostMapping("/")
+    fun createSelectionCriteria(@PathVariable decisionId: Long, @Valid @RequestBody selectionCriteria: SelectionCriteria,
+                             principal: Principal): ResponseEntity<*> {
 
-        return selectionCriteria.map { response -> ResponseEntity.ok().body(response) }
-                .orElse(ResponseEntity(HttpStatus.NOT_FOUND))
-    }
+        val decision  = selectionCriteriaService.saveSelectionCriteria(principal.name, decisionId, selectionCriteria)
 
-
-    @PostMapping("/selectionCriteria/{decision_id}")
-    fun createSelectionCriteria(@PathVariable decision_id: Long, @Valid @RequestBody selectionCriteria: SelectionCriteria,
-                                principal: Principal): ResponseEntity<*> {
-
-        var result: SelectionCriteria? = null
-
-        val decision = decisionRepository.findByIdOrNull(decision_id)
-
-        if (decision != null && decision.user!!.username == principal.name) {
-            selectionCriteria.decision = decision
-            result = selectionCriteriaRepository.save(selectionCriteria)
-        }
-        return if (result != null) {
-            ResponseEntity<Any>(result, HttpStatus.CREATED)
+        return if (decision != null) {
+            ResponseEntity<Any>(decision, HttpStatus.CREATED)
         } else {
             ResponseEntity<Any>(null, HttpStatus.BAD_REQUEST)
         }
 
     }
 
-    @DeleteMapping("/selectionCriteria/{criteria_id}")
-    fun deleteSelectionCriteria(@PathVariable criteria_id: Long, principal: Principal): ResponseEntity<*> {
+    @PutMapping("/")
+    fun editSelectionCriteria(@PathVariable decisionId: Long, @Valid @RequestBody selectionCriteria: SelectionCriteria,
+                           principal: Principal): ResponseEntity<*> {
 
-        val selectionCriteria = selectionCriteriaRepository.findById(criteria_id).filter {
-            it.decision!!.user!!.username == principal.name
-        }.orElse(null)
+        val decision  = selectionCriteriaService.saveSelectionCriteria(principal.name, decisionId, selectionCriteria)
 
-        return if (selectionCriteria != null) {
-
-            //Delete WeightedCriteria
-            val weightedCriteriaToDelete = weightedCriteriaRepository.findAll().filter {
-                it.selectionCriteria1.decision!!.user!!.username == principal.name &&
-                        it.selectionCriteria2.decision!!.user!!.username == principal.name &&
-                        it.selectedCriteria.decision!!.user!!.username == principal.name &&
-                        (it.selectionCriteria1.id == criteria_id || it.selectionCriteria2.id == criteria_id)
-            }
-
-            weightedCriteriaRepository.deleteInBatch(weightedCriteriaToDelete)
-
-            //Delete Selection Criteria
-            selectionCriteriaRepository.deleteById(criteria_id)
-            ResponseEntity.ok().build<Any>()
+        return if (decision != null) {
+            ResponseEntity<Any>(decision, HttpStatus.OK)
         } else {
-            ResponseEntity.notFound().build<Any>()
+            ResponseEntity<Any>(null, HttpStatus.BAD_REQUEST)
         }
 
     }
 
-    @GetMapping("/result/selectionCriteria/{decision_id}")
-    fun selectionCriteriaSorted(@PathVariable decision_id: Long, principal: Principal): Collection<SelectionCriteria> {
+    @DeleteMapping("/{optionId}")
+    fun deleteSelectionCriteria(@PathVariable decisionId: Long, @PathVariable optionId: Long,
+                             principal: Principal): ResponseEntity<*> {
 
-        return weightCriteria(decision_id, principal)
+        return if (selectionCriteriaService.deleteSelectionCriteria(principal.name, decisionId, optionId)) {
+            ResponseEntity<Any>(null, HttpStatus.OK)
+        } else {
+            ResponseEntity<Any>(null, HttpStatus.NOT_FOUND)
+        }
 
     }
 

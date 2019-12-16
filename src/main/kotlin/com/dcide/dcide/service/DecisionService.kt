@@ -10,7 +10,7 @@ import java.util.stream.Stream
 
 
 @Service
-class DecisionsService(private val decisionRepository: DecisionRepository) {
+class DecisionService(private val decisionRepository: DecisionRepository) {
 
     @Autowired
     lateinit var userRepository: UserRepository

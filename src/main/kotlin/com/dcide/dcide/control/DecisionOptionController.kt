@@ -2,7 +2,7 @@ package com.dcide.dcide.control
 
 
 import com.dcide.dcide.model.*
-import com.dcide.dcide.service.DecisionOptionsService
+import com.dcide.dcide.service.DecisionOptionService
 import org.springframework.beans.factory.annotation.Autowired
 
 
@@ -25,9 +25,6 @@ internal class DecisionOptionController(private val decisionOptionRepository: De
 
 
     @Autowired
-    lateinit var decisionRepository: DecisionRepository
-
-    @Autowired
     lateinit var weightedCriteriaRepository: WeightedCriteriaRepository
 
     @Autowired
@@ -40,7 +37,7 @@ internal class DecisionOptionController(private val decisionOptionRepository: De
     lateinit var selectionCriteriaController: SelectionCriteriaController
 
     @Autowired
-    lateinit var decisionOptionsService: DecisionOptionsService
+    lateinit var decisionOptionsService: DecisionOptionService
 
 
     @GetMapping("")
