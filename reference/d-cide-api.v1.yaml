@@ -30,16 +30,16 @@ paths:
                       name: Very important decisions
                     - id: 2
                       name: Just another decisions
-      operationId: opid-get-decisions
       description: ''
       tags:
         - Decisions
   '/decisions/{decisionId}/decisionOptions':
     parameters:
-      - type: string
-        name: decisionId
+      - name: decisionId
         in: path
         required: true
+        schema:
+          type: number
     get:
       summary: get list of all decision options
       tags:
@@ -70,16 +70,22 @@ paths:
                       name: Not to be
                       score: 0
       description: ''
+      parameters: []
+      operationId: ''
   '/decisions/{decisionId}/decisionOptions/{decisionOptionId}':
     parameters:
-      - type: string
-        name: decisionId
+      - name: decisionId
         in: path
+        description: ''
         required: true
-      - type: string
-        name: decisionOptionId
+        schema:
+          type: number
+      - name: decisionOptionId
         in: path
+        description: ''
         required: true
+        schema:
+          type: number
     post:
       summary: create one decision option
       responses:
@@ -168,148 +174,10 @@ paths:
           description: OK
       tags:
         - Decision Options
-  '/decisions/{decisionId}/selectionCriteria':
-    parameters:
-      - type: string
-        name: decisionId
-        in: path
-        required: true
-    get:
-      summary: Your GET endpoint
-      tags:
-        - Selection Criteria
-      responses: {}
-  '/decisions/{decisionId}/selectionCriteria/{selectionCriteriaId}':
-    parameters:
-      - type: string
-        name: decisionId
-        in: path
-        required: true
-      - type: string
-        name: selectionCriteriaId
-        in: path
-        required: true
-    get:
-      summary: Your GET endpoint
-      tags:
-        - Selection Criteria
-      responses: {}
-    post:
-      summary: ''
-      responses:
-        '200':
-          description: OK
-    put:
-      summary: ''
-      responses:
-        '200':
-          description: OK
-    delete:
-      summary: ''
-      responses:
-        '200':
-          description: OK
-  '/decisions/{decisionId}/weightedCriteria':
-    parameters:
-      - type: string
-        name: decisionId
-        in: path
-        required: true
-    get:
-      summary: Your GET endpoint
-      tags: []
-      responses: {}
-    post:
-      summary: ''
-      responses:
-        '200':
-          description: OK
-  '/decisions/{decisionId}/weightedCriteria/{weightedCriteriaId}':
-    parameters:
-      - type: string
-        name: decisionId
-        in: path
-        required: true
-      - type: string
-        name: weightedCriteriaId
-        in: path
-        required: true
-    get:
-      summary: Your GET endpoint
-      tags: []
-      responses: {}
-    post:
-      summary: ''
-      responses:
-        '200':
-          description: OK
-  '/decisions/{decisionId}/ratedOptions':
-    parameters:
-      - type: string
-        name: decisionId
-        in: path
-        required: true
-    get:
-      summary: Your GET endpoint
-      tags: []
-      responses: {}
-  '/decisions/{decisionId}/ratedOptions/{ratedOptionId}':
-    parameters:
-      - type: string
-        name: decisionId
-        in: path
-        required: true
-      - type: string
-        name: ratedOptionId
-        in: path
-        required: true
-    get:
-      summary: Your GET endpoint
-      tags: []
-      responses: {}
-    post:
-      summary: ''
-      responses:
-        '200':
-          description: OK
-    put:
-      summary: ''
-      responses:
-        '200':
-          description: OK
-    delete:
-      summary: ''
-      responses:
-        '200':
-          description: OK
-  '/decisions/{decisionId}/decisionOptions/results':
-    parameters:
-      - type: string
-        name: decisionId
-        in: path
-        required: true
-    get:
-      summary: Your GET endpoint
-      responses: {}
-      tags:
-        - Decision Options
-        - Results
-  '/decisions/{decisionId}/selectionCriteria/results':
-    parameters:
-      - type: string
-        name: decisionId
-        in: path
-        required: true
-        tags:
-          - Results
-          - Selection Criteria
-    get:
-      summary: Your GET endpoint
-      responses: {}
   /decisions/:
     post:
       summary: post new decision
-      operationId: opid-post-decisions
+      operationId: ''
       responses:
         '201':
           description: Created
@@ -346,7 +214,7 @@ paths:
         - Decisions
     put:
       summary: edit decision
-      operationId: opid-put-decisions
+      operationId: ''
       responses:
         '200':
           description: OK
@@ -418,19 +286,19 @@ paths:
                     name: Very important decision
       description: ''
       parameters: []
-      operationId: opid-get-decisions-decisionId
+      operationId: ''
       requestBody: {}
       tags:
         - Decisions
     parameters:
       - schema:
-          type: string
+          type: number
         name: decisionId
         in: path
         required: true
     delete:
       summary: delete one decision
-      operationId: 'opid-delete-decisions-{decisionId}'
+      operationId: ''
       responses:
         '200':
           description: OK
@@ -459,7 +327,7 @@ paths:
                     type: string
                   fullName:
                     type: string
-      operationId: opid-post-users
+      operationId: ''
       requestBody:
         content:
           application/json:
@@ -492,7 +360,7 @@ paths:
   /sessions/:
     post:
       summary: create session (user login)
-      operationId: post-sessions
+      operationId: ''
       responses:
         '201':
           description: Created
@@ -554,6 +422,146 @@ paths:
                   value:
                     success: true
                     token: Bearer eyJhbGciOiJIUzUxMiJ9.eyJyZWdpc3RlbbVkVXNlciI6ZmFsc2UsImZ1bGxOYW1lIjoiVW5yZWdpc3RlcmVkIFVzZXIgNzAiLCJpZCI6MTAyLCJleHAiOjE1NzU1MTk0NTQsImlhdCI6MTU3NTIxOTQ1NCwidXNlcm5hbWUiOiI3MEBVbnJlZ2lzdGVyZWRVc2VyLmNvbSJ9.Ff3p8ZW4FWXYUvzLXg3gNYWb101Ffm8rA9nnaU-6z8RUygAtxE1avgf91Vn9Uuz0YlA_toJi0HnSuyq6CVwNwQ
-      operationId: opid-get-sessions-unregistered
+      operationId: ''
+  '/decisions/{decisionId}/selectionCriteria':
+    parameters:
+      - type: string
+        name: decisionId
+        in: path
+        required: true
+        schema:
+          type: number
+    get:
+      summary: get list of all selection criteria
+      tags:
+        - Selection Criteria
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: number
+                    name:
+                      type: string
+                    score:
+                      type: number
+              examples:
+                Examle:
+                  value:
+                    - id: 1
+                      name: To be
+                      score: 0
+                    - id: 2
+                      name: Not to be
+                      score: 0
+      description: ''
+  '/decisions/{decisionId}/selectionCriteria/{decisionOptionId}':
+    parameters:
+      - type: string
+        name: decisionId
+        in: path
+        required: true
+        schema:
+          type: number
+      - type: string
+        name: decisionOptionId
+        in: path
+        required: true
+        schema:
+          type: number
+    post:
+      summary: create one decision option
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: number
+                  name:
+                    type: string
+                  score:
+                    type: number
+              examples:
+                Example:
+                  value:
+                    id: 1
+                    name: To be
+                    score: 0
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+              required:
+                - name
+            examples:
+              Example:
+                value:
+                  name: To be
+      tags:
+        - Selection Criteria
+      operationId: ''
+    put:
+      summary: edit one decision option
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: number
+                  name:
+                    type: string
+                  score:
+                    type: number
+              examples:
+                Example:
+                  value:
+                    id: 1
+                    name: Not to be
+                    score: 0
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: number
+                name:
+                  type: string
+              required:
+                - id
+                - name
+            examples:
+              Example:
+                value:
+                  id: 1
+                  name: Not to be
+      tags:
+        - Selection Criteria
+    delete:
+      summary: delete one decision option
+      responses:
+        '200':
+          description: OK
+      tags:
+        - Selection Criteria
 components:
   schemas: {}
