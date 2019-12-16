@@ -1,7 +1,7 @@
 package com.dcide.dcide.control
 
 
-import com.dcide.dcide.model.DecisionsRepository
+import com.dcide.dcide.model.DecisionRepository
 import com.dcide.dcide.model.SelectionCriteria
 import com.dcide.dcide.model.SelectionCriteriaRepository
 import com.dcide.dcide.model.WeightedCriteriaRepository
@@ -21,7 +21,7 @@ import java.security.Principal
 internal class SelectionCriteriaController(private val selectionCriteriaRepository: SelectionCriteriaRepository) {
 
     @Autowired
-    lateinit var decisionsRepository: DecisionsRepository
+    lateinit var decisionRepository: DecisionRepository
 
     @Autowired
     lateinit var weightedCriteriaRepository: WeightedCriteriaRepository
@@ -31,7 +31,7 @@ internal class SelectionCriteriaController(private val selectionCriteriaReposito
 
         var result: MutableSet<SelectionCriteria>? = null
 
-        val decision = decisionsRepository.findByIdOrNull(decision_id)
+        val decision = decisionRepository.findByIdOrNull(decision_id)
 
         if (decision != null && decision.user!!.username == principal.name) {
             result = decision.selectionCriteria.sortedByDescending { it.id }.toMutableSet()
@@ -62,7 +62,7 @@ internal class SelectionCriteriaController(private val selectionCriteriaReposito
 
         var result: SelectionCriteria? = null
 
-        val decision = decisionsRepository.findByIdOrNull(decision_id)
+        val decision = decisionRepository.findByIdOrNull(decision_id)
 
         if (decision != null && decision.user!!.username == principal.name) {
             selectionCriteria.decision = decision

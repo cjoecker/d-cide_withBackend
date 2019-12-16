@@ -4,7 +4,6 @@ package com.dcide.dcide.control
 import com.dcide.dcide.model.*
 import com.dcide.dcide.service.DecisionOptionsService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.repository.findByIdOrNull
 
 
 import org.springframework.http.HttpStatus
@@ -26,7 +25,7 @@ internal class DecisionOptionController(private val decisionOptionRepository: De
 
 
     @Autowired
-    lateinit var decisionsRepository: DecisionsRepository
+    lateinit var decisionRepository: DecisionRepository
 
     @Autowired
     lateinit var weightedCriteriaRepository: WeightedCriteriaRepository
@@ -52,54 +51,60 @@ internal class DecisionOptionController(private val decisionOptionRepository: De
         return ResponseEntity<Any>(decisions, HttpStatus.OK)
     }
 
-    @GetMapping("/decisionOption/{option_id}")
-    fun getDecisionOption(@PathVariable option_id: Long, principal: Principal): ResponseEntity<*> {
+    @GetMapping("/{optionId}")
+    fun getDecisionOption(@PathVariable decisionId: Long, @PathVariable optionId: Long, principal: Principal): ResponseEntity<*> {
 
-        val decisionOption = decisionOptionRepository.findById(option_id).filter {
-            it.decision!!.user!!.username == principal.name
+        val decisionOption = decisionOptionsService.getDecisionOptionsById(principal.name, decisionId, optionId)
+
+        return if (decisionOption != null) {
+            ResponseEntity<Any>(decisionOption, HttpStatus.CREATED)
+        } else {
+            ResponseEntity<Any>(null, HttpStatus.NOT_FOUND)
         }
-
-        return decisionOption.map { response -> ResponseEntity.ok().body(response) }
-                .orElse(ResponseEntity(HttpStatus.NOT_FOUND))
     }
 
 
-    @PostMapping("/decisionOption/{decision_id}")
-    fun createDecisionOption(@PathVariable decision_id: Long, @Valid @RequestBody decisionOption: DecisionOption,
+    @PostMapping("/")
+    fun createDecisionOption(@PathVariable decisionId: Long, @Valid @RequestBody decisionOption: DecisionOption,
                              principal: Principal): ResponseEntity<*> {
 
-        var result: DecisionOption? = null
+        val decision  = decisionOptionsService.saveDecisionOption(principal.name, decisionId, decisionOption)
 
-        val decision = decisionsRepository.findByIdOrNull(decision_id)
-
-        if (decision != null && decision.user!!.username == principal.name) {
-            decisionOption.decision = decision
-            result = decisionOptionRepository.save(decisionOption)
-        }
-        return if (result != null) {
-            ResponseEntity<Any>(result, HttpStatus.CREATED)
+        return if (decision != null) {
+            ResponseEntity<Any>(decision, HttpStatus.CREATED)
         } else {
             ResponseEntity<Any>(null, HttpStatus.BAD_REQUEST)
         }
 
     }
 
-    @DeleteMapping("/decisionOption/{option_id}")
-    fun deleteDecisionOption(@PathVariable option_id: Long, principal: Principal): ResponseEntity<*> {
+    @PutMapping("/")
+    fun editDecisionOption(@PathVariable decisionId: Long, @Valid @RequestBody decisionOption: DecisionOption,
+                             principal: Principal): ResponseEntity<*> {
 
-        val decisionOption = decisionOptionRepository.findById(option_id).filter {
-            it.decision!!.user!!.username == principal.name
-        }.orElse(null)
+        val decision  = decisionOptionsService.saveDecisionOption(principal.name, decisionId, decisionOption)
 
-        return if (decisionOption != null) {
-            decisionOptionRepository.deleteById(option_id)
-            ResponseEntity.ok().build<Any>()
+        return if (decision != null) {
+            ResponseEntity<Any>(decision, HttpStatus.OK)
         } else {
-            ResponseEntity.notFound().build<Any>()
+            ResponseEntity<Any>(null, HttpStatus.BAD_REQUEST)
         }
 
     }
 
+    @DeleteMapping("/{optionId}")
+    fun deleteDecisionOption(@PathVariable decisionId: Long, @PathVariable optionId: Long,
+                             principal: Principal): ResponseEntity<*> {
+
+        return if (decisionOptionsService.deleteDecisionOption(principal.name, decisionId, optionId)) {
+            ResponseEntity<Any>(null, HttpStatus.OK)
+        } else {
+            ResponseEntity<Any>(null, HttpStatus.NOT_FOUND)
+        }
+
+    }
+
+    //refactor
     @GetMapping("/result/decisionOption/{decision_id}")
     fun decisionOptionSorted(@PathVariable decision_id: Long, principal: Principal): Collection<DecisionOption> {
 

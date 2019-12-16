@@ -10,7 +10,7 @@ import java.util.stream.Stream
 
 
 @Service
-class DecisionsService(private val decisionsRepository: DecisionsRepository) {
+class DecisionsService(private val decisionRepository: DecisionRepository) {
 
     @Autowired
     lateinit var userRepository: UserRepository
@@ -30,7 +30,7 @@ class DecisionsService(private val decisionsRepository: DecisionsRepository) {
 
     fun getDecisions(username: String): Iterable<Decision> {
 
-        val decisions = decisionsRepository.findAll().filter {
+        val decisions = decisionRepository.findAll().filter {
             it.user?.username == username
         }
 
@@ -39,11 +39,9 @@ class DecisionsService(private val decisionsRepository: DecisionsRepository) {
 
     fun getDecisionById(username: String, id: Long): Decision? {
 
-        val decisions = decisionsRepository.findById(id).filter {
+        return decisionRepository.findById(id).filter {
             it.user?.username == username
         }.orElse(null)
-
-        return decisions
     }
 
 
@@ -64,7 +62,7 @@ class DecisionsService(private val decisionsRepository: DecisionsRepository) {
            }
         }
 
-        return decisionsRepository.save(decision)
+        return decisionRepository.save(decision)
     }
 
     // refactor
@@ -84,7 +82,7 @@ class DecisionsService(private val decisionsRepository: DecisionsRepository) {
             weightedCriteriaRepository.deleteAll(weightedCriterias)
 
             //Delete Decision
-            decisionsRepository.deleteById(decisionsId)
+            decisionRepository.deleteById(decisionsId)
             true
         } else {
             false

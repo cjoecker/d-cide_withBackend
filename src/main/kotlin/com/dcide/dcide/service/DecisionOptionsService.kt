@@ -3,20 +3,9 @@ package com.dcide.dcide.service
 
 import com.dcide.dcide.model.*
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.repository.findByIdOrNull
 
 
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
-import org.springframework.web.bind.annotation.*
-
-import javax.validation.Valid
-
-
-import org.springframework.web.bind.annotation.GetMapping
-import java.lang.Math.abs
-import java.security.Principal
 
 
 @Service
@@ -24,7 +13,7 @@ internal class DecisionOptionsService(private val decisionOptionRepository: Deci
 
 
     @Autowired
-    lateinit var decisionsRepository: DecisionsRepository
+    lateinit var decisionRepository: DecisionRepository
 
     @Autowired
     lateinit var weightedCriteriaRepository: WeightedCriteriaRepository
@@ -35,16 +24,62 @@ internal class DecisionOptionsService(private val decisionOptionRepository: Deci
     @Autowired
     lateinit var selectionCriteriaRepository: SelectionCriteriaRepository
 
+    @Autowired
+    lateinit var decisionsService: DecisionsService
+
     fun getDecisionOptions(username: String, decisionId: Long): Iterable<DecisionOption> {
 
         val decisionOptions = decisionOptionRepository.findAll().filter {
-            it.decision?.user?.username  == username &&
+            it.decision?.user?.username == username &&
                     it.decision?.id == decisionId
         }
 
         return decisionOptions.toList().sortedByDescending { it.id }
     }
 
+
+    fun getDecisionOptionsById(username: String, decisionId: Long, optionId: Long): DecisionOption? {
+
+        return decisionOptionRepository.findById(optionId).filter {
+            it.decision?.user?.username == username &&
+                    it.decision?.id == decisionId
+        }.orElse(null)
+    }
+
+    fun saveDecisionOption(username: String, decisionId: Long, decisionOption: DecisionOption): DecisionOption? {
+
+        //Authenticate Decision
+        val decisionLocal  = decisionsService.getDecisionById(username, decisionId)
+
+        if (decisionLocal != null && decisionLocal.user?.username != username)
+            return null
+
+        //Authenticate Decision Option
+        val decisionOptionLocal = decisionOptionRepository.findById(decisionOption.id).orElse(null)
+
+        if (decisionOptionLocal != null && decisionOptionLocal.decision?.user?.username != username)
+            return null
+
+        //Save Decision Option
+        decisionOption.decision = decisionLocal
+
+        return decisionOptionRepository.save(decisionOption)
+
+    }
+
+    fun deleteDecisionOption(username: String, decisionId: Long, optionId:Long): Boolean {
+
+        val decisionOptionLocal = getDecisionOptionsById(username, decisionId, optionId)
+
+        return if (decisionOptionLocal != null){
+            decisionOptionRepository.deleteById(optionId)
+            true
+        }else{
+            false
+        }
+
+
+    }
 
 
 }

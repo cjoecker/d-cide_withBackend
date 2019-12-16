@@ -22,16 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired
 @RestController
 @RequestMapping("/api/decisions")
 @CrossOrigin
-internal class DecisionsController(private val decisionsRepository: DecisionsRepository) {
-
-    @Autowired
-    lateinit var userRepository: UserRepository
-
-    @Autowired
-    lateinit var decisionOptionRepository: DecisionOptionRepository
-
-    @Autowired
-    lateinit var selectionCriteriaRepository: SelectionCriteriaRepository
+internal class DecisionsController(private val decisionRepository: DecisionRepository) {
 
     @Autowired
     lateinit var decisionsService: DecisionsService
@@ -79,7 +70,7 @@ internal class DecisionsController(private val decisionsRepository: DecisionsRep
         return if (decisionsService.deleteDecision(principal.name, decisionsId)) {
             ResponseEntity<Any>(null, HttpStatus.OK)
         } else {
-            ResponseEntity<Any>(null, HttpStatus.BAD_REQUEST)
+            ResponseEntity<Any>(null, HttpStatus.NOT_FOUND)
         }
 
     }

@@ -1,6 +1,5 @@
 package com.dcide.dcide.model
 
-import com.dcide.dcide.model.Decision
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty

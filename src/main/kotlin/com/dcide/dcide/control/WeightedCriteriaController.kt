@@ -21,7 +21,7 @@ internal class WeightedCriteriaController(private val weightedCriteriaRepository
     lateinit var selectionCriteriaRepository: SelectionCriteriaRepository
 
     @Autowired
-    lateinit var decisionsRepository: DecisionsRepository
+    lateinit var decisionRepository: DecisionRepository
 
 
     @GetMapping("/every_weightedCriteria/{decision_id}")
@@ -29,7 +29,7 @@ internal class WeightedCriteriaController(private val weightedCriteriaRepository
 
 
         //Check user and decision id
-        val decision = decisionsRepository.findByIdOrNull(decision_id)
+        val decision = decisionRepository.findByIdOrNull(decision_id)
 
         if (decision == null || decision.user!!.username != principal.name) {
             return ResponseEntity<Any>(null, HttpStatus.NOT_FOUND)

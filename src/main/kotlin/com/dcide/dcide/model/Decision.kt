@@ -12,7 +12,7 @@ data class Decision(
         @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
         val id: Long?,
 
-        var name: String,
+        var name: String = "",
 
         @JsonFormat(pattern = "dd.MM.yyyy HH:mm:ss")
         @Column(updatable = false)
