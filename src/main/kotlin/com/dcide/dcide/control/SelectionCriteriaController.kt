@@ -86,39 +86,39 @@ internal class SelectionCriteriaController(private val selectionCriteriaReposito
 
     }
 
-
-    fun weightCriteria(decision_id: Long, principal: Principal): Collection<SelectionCriteria> {
-
-        //Get max sum of weighted criteria
-        val weightSum = weightedCriteriaRepository.findAll().filter {
-            it.selectedCriteria.decision!!.id == decision_id &&
-                    it.selectedCriteria.decision!!.user!!.username == principal.name
-        }.sumBy { Math.abs(it.weight) }
-
-
-        //Sum Values
-        selectionCriteriaRepository.findAll().filter {
-            it.decision!!.id == decision_id &&
-                    it.decision!!.user!!.username == principal.name
-        }.forEach { selectionCriteria ->
-
-            var score = weightedCriteriaRepository.findAll().filter {
-                it.selectedCriteria.id == selectionCriteria.id &&
-                it.selectionCriteria1.decision!!.user!!.username == principal.name &&
-                        it.selectionCriteria2.decision!!.user!!.username == principal.name
-            }.sumBy { Math.abs(it.weight) }.toDouble()
-
-            //Make value 0.0 - 10.0 scale
-            score = Math.round(score / weightSum * 100) / 10.0
-
-            val newSelectionCriteria = selectionCriteria.copy(score = score)
-
-            selectionCriteriaRepository.save(newSelectionCriteria)
-        }
-
-        return selectionCriteriaRepository.findAll().filter {
-            it.decision!!.user!!.username == principal.name &&
-                    it.decision!!.id == decision_id
-        }.sortedWith(compareBy { it.score }).reversed()
-    }
+// refactor
+//    fun weightCriteria(decision_id: Long, principal: Principal): Collection<SelectionCriteria> {
+//
+//        //Get max sum of weighted criteria
+//        val weightSum = weightedCriteriaRepository.findAll().filter {
+//            it.selectedCriteria.decision!!.id == decision_id &&
+//                    it.selectedCriteria.decision!!.user!!.username == principal.name
+//        }.sumBy { Math.abs(it.weight) }
+//
+//
+//        //Sum Values
+//        selectionCriteriaRepository.findAll().filter {
+//            it.decision!!.id == decision_id &&
+//                    it.decision!!.user!!.username == principal.name
+//        }.forEach { selectionCriteria ->
+//
+//            var score = weightedCriteriaRepository.findAll().filter {
+//                it.selectedCriteria.id == selectionCriteria.id &&
+//                it.selectionCriteria1.decision!!.user!!.username == principal.name &&
+//                        it.selectionCriteria2.decision!!.user!!.username == principal.name
+//            }.sumBy { Math.abs(it.weight) }.toDouble()
+//
+//            //Make value 0.0 - 10.0 scale
+//            score = Math.round(score / weightSum * 100) / 10.0
+//
+//            val newSelectionCriteria = selectionCriteria.copy(score = score)
+//
+//            selectionCriteriaRepository.save(newSelectionCriteria)
+//        }
+//
+//        return selectionCriteriaRepository.findAll().filter {
+//            it.decision!!.user!!.username == principal.name &&
+//                    it.decision!!.id == decision_id
+//        }.sortedWith(compareBy { it.score }).reversed()
+//    }
 }

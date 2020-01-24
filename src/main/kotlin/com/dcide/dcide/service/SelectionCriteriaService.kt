@@ -7,10 +7,13 @@ import org.springframework.stereotype.Service
 
 
 @Service
-internal class SelectionCriteriaService(private val selectionCriteriaRepository: SelectionCriteriaRepository) {
+class SelectionCriteriaService(private val selectionCriteriaRepository: SelectionCriteriaRepository) {
 
     @Autowired
     lateinit var decisionService: DecisionService
+
+    @Autowired
+    lateinit var weightedCriteriaService: WeightedCriteriaService
 
     fun getSelectionCriteria(username: String, decisionId: Long): Iterable<SelectionCriteria> {
 
@@ -49,6 +52,8 @@ internal class SelectionCriteriaService(private val selectionCriteriaRepository:
     fun deleteSelectionCriteria(username: String, decisionId: Long, optionId:Long): Boolean {
 
         val selectionCriteriaLocal = getSelectionCriteriaById(username, decisionId, optionId)
+
+        weightedCriteriaService.deleteWeightedCriteriaOrphans(username, decisionId, optionId)
 
         return if (selectionCriteriaLocal != null){
             selectionCriteriaRepository.deleteById(optionId)

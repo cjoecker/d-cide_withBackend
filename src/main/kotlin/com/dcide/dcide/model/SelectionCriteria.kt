@@ -33,7 +33,7 @@ data class SelectionCriteria(
 //    val weightedCriteria3: WeightedCriteria? = null
 
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.REFRESH], mappedBy = "selectionCriteria", orphanRemoval = true)
-    @JsonIgnore
-    val ratedOption: MutableSet<RatedOption> = mutableSetOf()
+//    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.REFRESH], mappedBy = "selectionCriteria", orphanRemoval = true)
+//    @JsonIgnore
+//    val ratedOption: MutableSet<RatedOption> = mutableSetOf()
 }

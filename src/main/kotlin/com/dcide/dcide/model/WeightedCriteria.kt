@@ -20,20 +20,11 @@ data class WeightedCriteria(
         var selectionCriteria1Id: Long,
         var selectionCriteria2Id: Long,
 
+        var selectedCriteriaId: Long,
+
 
         @ManyToOne(fetch = FetchType.EAGER)
         @JsonIgnore
-        var decision: Decision?,
-
-        //Relationships
-        //Parent
-        @OneToOne(fetch = FetchType.EAGER)
-        var selectionCriteria1: SelectionCriteria,
-
-        @OneToOne(fetch = FetchType.EAGER)
-        var selectionCriteria2: SelectionCriteria,
-
-        @OneToOne(fetch = FetchType.EAGER)
-        var selectedCriteria: SelectionCriteria
+        var decision: Decision?
 
 )
