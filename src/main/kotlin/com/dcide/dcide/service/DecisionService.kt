@@ -48,9 +48,8 @@ class DecisionService(private val decisionRepository: DecisionRepository) {
     fun saveDecision(username: String, decision: Decision): Decision? {
 
         //Authenticate Decision
-        if (decision.id != null && getDecisionById(username, decision.id) == null)
+        if (decision.id != null && getDecisionById(username, decision.id!!) == null)
             return null
-
 
         if(decision.user == null){
             //Save to user

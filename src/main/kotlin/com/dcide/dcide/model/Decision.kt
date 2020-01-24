@@ -10,7 +10,7 @@ import javax.persistence.*
 @Entity
 data class Decision(
         @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-        val id: Long?,
+        var id: Long?,
 
         var name: String = "",
 

@@ -34,16 +34,10 @@ internal class SelectionCriteriaService(private val selectionCriteriaRepository:
     fun saveSelectionCriteria(username: String, decisionId: Long, selectionCriteria: SelectionCriteria): SelectionCriteria? {
 
         //Authenticate Decision
-        val decisionLocal  = decisionService.getDecisionById(username, decisionId)
-
-        if (decisionLocal != null && decisionLocal.user?.username != username)
-            return null
+        val decisionLocal = decisionService.getDecisionById(username, decisionId) ?: return null
 
         //Authenticate Decision Option
         val selectionCriteriaLocal = selectionCriteriaRepository.findById(selectionCriteria.id).orElse(null)
-
-        if (selectionCriteriaLocal != null && selectionCriteriaLocal.decision?.user?.username != username)
-            return null
 
         //Save Decision Option
         selectionCriteria.decision = decisionLocal

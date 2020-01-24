@@ -34,16 +34,10 @@ internal class DecisionOptionService(private val decisionOptionRepository: Decis
     fun saveDecisionOption(username: String, decisionId: Long, decisionOption: DecisionOption): DecisionOption? {
 
         //Authenticate Decision
-        val decisionLocal  = decisionService.getDecisionById(username, decisionId)
-
-        if (decisionLocal != null && decisionLocal.user?.username != username)
-            return null
+        val decisionLocal = decisionService.getDecisionById(username, decisionId) ?: return null
 
         //Authenticate Decision Option
         val decisionOptionLocal = decisionOptionRepository.findById(decisionOption.id).orElse(null)
-
-        if (decisionOptionLocal != null && decisionOptionLocal.decision?.user?.username != username)
-            return null
 
         //Save Decision Option
         decisionOption.decision = decisionLocal
