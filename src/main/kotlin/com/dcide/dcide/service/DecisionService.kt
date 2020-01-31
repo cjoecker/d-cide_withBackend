@@ -25,11 +25,6 @@ class DecisionService(private val decisionRepository: DecisionRepository) {
     @Autowired
     lateinit var selectionCriteriaRepository: SelectionCriteriaRepository
 
-    @Autowired
-    lateinit var weightedCriteriaRepository: WeightedCriteriaRepository
-
-    @Autowired
-    lateinit var weightedCriteriaService: WeightedCriteriaService
 
 
     fun getDecisions(username: String): Iterable<Decision> {

@@ -1,5 +1,12 @@
 package com.dcide.dcide.model
 
-import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.repository.CrudRepository
+import org.springframework.stereotype.Repository
 
-interface WeightedCriteriaRepository : JpaRepository<WeightedCriteria, Long>
+@Repository
+interface WeightedCriteriaRepository : CrudRepository<WeightedCriteria, Long> {
+
+    fun getById(id: Long?): WeightedCriteria?
+
+    override fun findAll(): Iterable<WeightedCriteria>
+}

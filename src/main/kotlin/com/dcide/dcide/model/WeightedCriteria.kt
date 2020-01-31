@@ -1,12 +1,6 @@
 package com.dcide.dcide.model
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import lombok.Data
-import lombok.NoArgsConstructor
-import lombok.RequiredArgsConstructor
-import org.apache.catalina.User
-import org.hibernate.annotations.OnDelete
-import org.hibernate.annotations.OnDeleteAction
 import javax.persistence.*
 
 

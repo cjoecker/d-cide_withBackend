@@ -5,7 +5,6 @@ import com.dcide.dcide.model.*
 import com.dcide.dcide.service.SelectionCriteriaService
 
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -17,9 +16,6 @@ import java.security.Principal
 @RestController
 @RequestMapping("/api/decisions/{decisionId}/selectionCriteria")
 internal class SelectionCriteriaController(private val selectionCriteriaRepository: SelectionCriteriaRepository) {
-
-    @Autowired
-    lateinit var weightedCriteriaRepository: WeightedCriteriaRepository
 
     @Autowired
     lateinit var selectionCriteriaService: SelectionCriteriaService

@@ -35,11 +35,17 @@ data class Decision(
     //Child
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.REFRESH], mappedBy = "decision", orphanRemoval = true)
     @JsonIgnore
+    val weightedCriteria: MutableSet<WeightedCriteria> = mutableSetOf()
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.REFRESH], mappedBy = "decision", orphanRemoval = true)
+    @JsonIgnore
     val decisionOption: MutableSet<DecisionOption> = mutableSetOf()
 
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.REFRESH], mappedBy = "decision", orphanRemoval = true)
     @JsonIgnore
     val selectionCriteria: MutableSet<SelectionCriteria> = mutableSetOf()
+
+
 
     @PrePersist
     fun onCreate() {
