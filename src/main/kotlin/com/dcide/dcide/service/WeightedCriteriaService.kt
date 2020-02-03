@@ -84,9 +84,9 @@ class WeightedCriteriaService(private val weightedCriteriaRepository: WeightedCr
     }
 
 
-    fun getWeightedCriteriaById(username: String, decisionId: Long, optionId: Long): WeightedCriteria? {
+    fun getWeightedCriteriaById(username: String, decisionId: Long, criteriaId: Long): WeightedCriteria? {
 
-        return weightedCriteriaRepository.findById(optionId).filter {
+        return weightedCriteriaRepository.findById(criteriaId).filter {
             it.decision?.user?.username == username &&
                     it.decision?.id == decisionId
         }.orElse(null)
@@ -106,14 +106,28 @@ class WeightedCriteriaService(private val weightedCriteriaRepository: WeightedCr
 
     }
 
+    fun deleteWeightedCriteria(username: String, decisionId: Long, criteriaId:Long): Boolean {
+
+        val weightedCriteriaLocal = getWeightedCriteriaById(username, decisionId, criteriaId)
+
+        return if (weightedCriteriaLocal != null){
+            weightedCriteriaRepository.deleteById(criteriaId)
+            true
+        }else{
+            false
+        }
+
+
+    }
+
 
     fun deleteWeightedCriteriaOrphans(username: String, decisionId: Long, selectionCriteriaId: Long) {
 
         //Authenticate decision
-        val decision = decisionService.getDecisionById(username, decisionId)
+        val decision = decisionService.getDecisionById(username, decisionId) ?: return
 
         val weightedCriteria = weightedCriteriaRepository.findAll().filter {
-            it.decision?.id == decisionId &&
+            it.decision?.id == decision.id &&
                     (it.selectionCriteria1Id == selectionCriteriaId ||
                             it.selectionCriteria2Id == selectionCriteriaId)
         }

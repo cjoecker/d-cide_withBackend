@@ -51,11 +51,11 @@ class SelectionCriteriaService(private val selectionCriteriaRepository: Selectio
 
     fun deleteSelectionCriteria(username: String, decisionId: Long, optionId:Long): Boolean {
 
-        val selectionCriteriaLocal = getSelectionCriteriaById(username, decisionId, optionId)
+        val selectionCriteria = getSelectionCriteriaById(username, decisionId, optionId)
 
         weightedCriteriaService.deleteWeightedCriteriaOrphans(username, decisionId, optionId)
 
-        return if (selectionCriteriaLocal != null){
+        return if (selectionCriteria != null){
             selectionCriteriaRepository.deleteById(optionId)
             true
         }else{

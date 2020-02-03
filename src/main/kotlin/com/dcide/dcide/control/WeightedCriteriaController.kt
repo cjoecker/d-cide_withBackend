@@ -65,5 +65,15 @@ internal class WeightedCriteriaController(private val weightedCriteriaRepository
 
     }
 
+    @DeleteMapping("/{criteriaId}")
+    fun deleteWeightedCriteria(@PathVariable decisionId: Long, @PathVariable criteriaId: Long,
+                               principal: Principal): ResponseEntity<*> {
+
+        weightedCriteriaService.deleteWeightedCriteria(principal.name, decisionId, criteriaId)
+
+        return ResponseEntity<Any>(null, HttpStatus.OK)
+
+    }
+
 
 }
