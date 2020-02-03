@@ -106,21 +106,6 @@ class WeightedCriteriaService(private val weightedCriteriaRepository: WeightedCr
 
     }
 
-    fun deleteWeightedCriteria(username: String, decisionId: Long, criteriaId:Long): Boolean {
-
-        val weightedCriteriaLocal = getWeightedCriteriaById(username, decisionId, criteriaId)
-
-        return if (weightedCriteriaLocal != null){
-            weightedCriteriaRepository.deleteById(criteriaId)
-            true
-        }else{
-            false
-        }
-
-
-    }
-
-
     fun deleteWeightedCriteriaOrphans(username: String, decisionId: Long, selectionCriteriaId: Long) {
 
         //Authenticate decision
