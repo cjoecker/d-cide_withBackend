@@ -18,22 +18,4 @@ data class SelectionCriteria(
 
 
 ) {
-    //Relationships
-    //Child
-//    @OneToOne(fetch = FetchType.EAGER, cascade = [CascadeType.REFRESH], mappedBy = "selectionCriteria1")
-//    @JsonIgnore
-//    val weightedCriteria1: WeightedCriteria? = null
-//
-//    @OneToOne(fetch = FetchType.EAGER, cascade = [CascadeType.REFRESH], mappedBy = "selectionCriteria2")
-//    @JsonIgnore
-//    val weightedCriteria2: WeightedCriteria? = null
-//
-//    @OneToOne(fetch = FetchType.EAGER, cascade = [CascadeType.REFRESH], mappedBy = "selectedCriteria")
-//    @JsonIgnore
-//    val weightedCriteria3: WeightedCriteria? = null
-
-
-//    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.REFRESH], mappedBy = "selectionCriteria", orphanRemoval = true)
-//    @JsonIgnore
-//    val ratedOption: MutableSet<RatedOption> = mutableSetOf()
 }

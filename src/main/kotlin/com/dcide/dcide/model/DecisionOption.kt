@@ -18,9 +18,5 @@ data class DecisionOption(
         var decision : Decision?
 
 ){
-        //Relationships
-        //Child
-        @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.REFRESH], mappedBy = "decisionOption", orphanRemoval = true)
-        @JsonIgnore
-        val ratedOption: MutableSet<RatedOption> = mutableSetOf()
+
 }

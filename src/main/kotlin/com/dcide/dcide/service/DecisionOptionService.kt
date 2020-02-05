@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service
 
 
 @Service
-internal class DecisionOptionService(private val decisionOptionRepository: DecisionOptionRepository) {
+class DecisionOptionService(private val decisionOptionRepository: DecisionOptionRepository) {
 
     @Autowired
     lateinit var decisionService: DecisionService
