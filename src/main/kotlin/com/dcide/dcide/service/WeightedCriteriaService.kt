@@ -40,7 +40,6 @@ class WeightedCriteriaService(private val weightedCriteriaRepository: WeightedCr
 
                 var id: Long = 0
                 var weight = 0
-                var selectedCriteriaId: Long = selectionCriteriaList[i].id
 
                 //Get old values
                 val filteredCriteria = weightedCriteriaOld.filter {
@@ -52,7 +51,6 @@ class WeightedCriteriaService(private val weightedCriteriaRepository: WeightedCr
                 if (filteredCriteria.count() > 0) {
                     id = filteredCriteria[0].id
                     weight = filteredCriteria[0].weight
-                    selectedCriteriaId = filteredCriteria[0].selectedCriteriaId
                 }
 
                 //Create new weighted criteria
@@ -61,7 +59,6 @@ class WeightedCriteriaService(private val weightedCriteriaRepository: WeightedCr
                         weight,
                         selectionCriteriaList[i].id,
                         selectionCriteriaList[j].id,
-                        selectedCriteriaId,
                         decision
                 )
 

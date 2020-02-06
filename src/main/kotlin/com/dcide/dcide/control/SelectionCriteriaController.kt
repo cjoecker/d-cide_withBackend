@@ -22,11 +22,16 @@ internal class SelectionCriteriaController(private val selectionCriteriaReposito
 
 
     @GetMapping("")
-    fun everySelectionCriteria(@PathVariable decisionId: Long, principal: Principal): ResponseEntity<*> {
+    fun everySelectionCriteria(@PathVariable decisionId: Long, @RequestParam(required = false) calculatedStore: Boolean, principal: Principal): ResponseEntity<*> {
+
+        if(calculatedStore) selectionCriteriaService.weightSelectionCriteria(principal.name, decisionId)
 
         val decisions = selectionCriteriaService.getSelectionCriteria(principal.name, decisionId)
 
-        return ResponseEntity<Any>(decisions, HttpStatus.OK)
+        return if(calculatedStore)
+            ResponseEntity<Any>(decisions, HttpStatus.OK)
+        else
+            ResponseEntity<Any>(decisions.sortedWith(compareBy { it.score }).reversed(), HttpStatus.OK)
     }
 
     @GetMapping("/{optionId}")

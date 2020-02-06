@@ -15,6 +15,9 @@ class SelectionCriteriaService(private val selectionCriteriaRepository: Selectio
     @Autowired
     lateinit var weightedCriteriaService: WeightedCriteriaService
 
+    @Autowired
+    lateinit var selectionCriteriaService: SelectionCriteriaService
+
     fun getSelectionCriteria(username: String, decisionId: Long): Iterable<SelectionCriteria> {
 
         val selectionCriteria = selectionCriteriaRepository.findAll().filter {
@@ -61,9 +64,34 @@ class SelectionCriteriaService(private val selectionCriteriaRepository: Selectio
         }else{
             false
         }
-
-
     }
 
+    fun weightSelectionCriteria(username: String, decisionId: Long) {
+
+        //Authenticate Decision
+        val decisionLocal = decisionService.getDecisionById(username, decisionId) ?: return
+
+        val weightedCriteria = decisionLocal.weightedCriteria
+        val selectionCriteria = decisionLocal.selectionCriteria
+
+        //Get max sum of weighted criteria
+        val weightSum = weightedCriteria.sumBy { Math.abs(it.weight) }
+
+
+        //Sum Values
+        selectionCriteria.forEach { selectionCriteria ->
+
+            var score = weightedCriteria.filter {
+                (it.selectionCriteria1Id == selectionCriteria.id && it.weight <= 0) ||
+                (it.selectionCriteria2Id == selectionCriteria.id && it.weight > 0)
+            }.sumBy { Math.abs(it.weight) }.toDouble()
+
+            //Make value 0.0 - 10.0 scale
+            score = Math.round(score / weightSum * 100) / 10.0
+
+            selectionCriteriaRepository.save(selectionCriteria.copy(score = score))
+        }
+
+    }
 
 }

@@ -14,8 +14,6 @@ data class WeightedCriteria(
         var selectionCriteria1Id: Long,
         var selectionCriteria2Id: Long,
 
-        var selectedCriteriaId: Long,
-
 
         @ManyToOne(fetch = FetchType.EAGER)
         @JsonIgnore
