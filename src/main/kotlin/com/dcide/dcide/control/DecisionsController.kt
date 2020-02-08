@@ -26,8 +26,6 @@ internal class DecisionsController(private val decisionRepository: DecisionRepos
     @Autowired
     lateinit var decisionService: DecisionService
 
-
-    //opid-get-decisions
     @GetMapping("")
     fun getDecisions(principal: Principal): ResponseEntity<*>  {
 
@@ -38,17 +36,6 @@ internal class DecisionsController(private val decisionRepository: DecisionRepos
     }
 
 
-    //opid-get-decisions-decisionId
-    @GetMapping("/{decisionsId}")
-    fun getDecision(@PathVariable decisionsId: Long, principal: Principal): ResponseEntity<*> {
-
-        val decision  = decisionService.getDecisionById(principal.name, decisionsId)
-
-        return ResponseEntity<Any>(decision, HttpStatus.OK)
-
-    }
-
-    //opid-post-decisions
     @PostMapping("/")
     @Throws(URISyntaxException::class)
     fun createDecision(@Valid @RequestBody decision: Decision, principal: Principal): ResponseEntity<*> {
@@ -62,7 +49,7 @@ internal class DecisionsController(private val decisionRepository: DecisionRepos
         }
     }
 
-    //opid-delete-decisions-{decisionId}
+
     @DeleteMapping("/{decisionsId}")
     fun deleteDecision(@PathVariable decisionsId: Long, principal: Principal): ResponseEntity<*> {
 
@@ -74,7 +61,7 @@ internal class DecisionsController(private val decisionRepository: DecisionRepos
 
     }
 
-    //opid-put-decisions
+
     @PutMapping("/")
     @Throws(URISyntaxException::class)
     fun updateDecision(@Valid @RequestBody decision: Decision, principal: Principal): ResponseEntity<*> {
