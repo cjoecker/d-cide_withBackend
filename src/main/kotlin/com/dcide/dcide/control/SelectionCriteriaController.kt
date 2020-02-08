@@ -22,16 +22,16 @@ internal class SelectionCriteriaController(private val selectionCriteriaReposito
 
 
     @GetMapping("")
-    fun everySelectionCriteria(@PathVariable decisionId: Long, @RequestParam(required = false) calculatedStore: Boolean, principal: Principal): ResponseEntity<*> {
+    fun everySelectionCriteria(@PathVariable decisionId: Long, @RequestParam(required = false) calculatedScore: Boolean, principal: Principal): ResponseEntity<*> {
 
-        if(calculatedStore) selectionCriteriaService.weightSelectionCriteria(principal.name, decisionId)
+        if (calculatedScore) selectionCriteriaService.weightSelectionCriteria(principal.name, decisionId)
 
-        val decisions = selectionCriteriaService.getSelectionCriteria(principal.name, decisionId)
+        val criteria = selectionCriteriaService.getSelectionCriteria(principal.name, decisionId)
 
-        return if(calculatedStore)
-            ResponseEntity<Any>(decisions, HttpStatus.OK)
+        return if (calculatedScore)
+            ResponseEntity<Any>(criteria.sortedWith(compareBy { it.score }).reversed(), HttpStatus.OK)
         else
-            ResponseEntity<Any>(decisions.sortedWith(compareBy { it.score }).reversed(), HttpStatus.OK)
+            ResponseEntity<Any>(criteria.shuffled(), HttpStatus.OK)
     }
 
     @GetMapping("/{optionId}")
@@ -49,9 +49,9 @@ internal class SelectionCriteriaController(private val selectionCriteriaReposito
 
     @PostMapping("/")
     fun createSelectionCriteria(@PathVariable decisionId: Long, @Valid @RequestBody selectionCriteria: SelectionCriteria,
-                             principal: Principal): ResponseEntity<*> {
+                                principal: Principal): ResponseEntity<*> {
 
-        val decision  = selectionCriteriaService.saveSelectionCriteria(principal.name, decisionId, selectionCriteria)
+        val decision = selectionCriteriaService.saveSelectionCriteria(principal.name, decisionId, selectionCriteria)
 
         return if (decision != null) {
             ResponseEntity<Any>(decision, HttpStatus.CREATED)
@@ -63,9 +63,9 @@ internal class SelectionCriteriaController(private val selectionCriteriaReposito
 
     @PutMapping("/")
     fun editSelectionCriteria(@PathVariable decisionId: Long, @Valid @RequestBody selectionCriteria: SelectionCriteria,
-                           principal: Principal): ResponseEntity<*> {
+                              principal: Principal): ResponseEntity<*> {
 
-        val decision  = selectionCriteriaService.saveSelectionCriteria(principal.name, decisionId, selectionCriteria)
+        val decision = selectionCriteriaService.saveSelectionCriteria(principal.name, decisionId, selectionCriteria)
 
         return if (decision != null) {
             ResponseEntity<Any>(decision, HttpStatus.OK)
@@ -77,7 +77,7 @@ internal class SelectionCriteriaController(private val selectionCriteriaReposito
 
     @DeleteMapping("/{optionId}")
     fun deleteSelectionCriteria(@PathVariable decisionId: Long, @PathVariable optionId: Long,
-                             principal: Principal): ResponseEntity<*> {
+                                principal: Principal): ResponseEntity<*> {
 
         return if (selectionCriteriaService.deleteSelectionCriteria(principal.name, decisionId, optionId)) {
             ResponseEntity<Any>(null, HttpStatus.OK)

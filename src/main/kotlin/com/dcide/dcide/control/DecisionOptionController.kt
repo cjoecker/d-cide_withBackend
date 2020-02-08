@@ -41,11 +41,17 @@ internal class DecisionOptionController(private val decisionOptionRepository: De
 
 
     @GetMapping("")
-    fun everyDecisionOptions(@PathVariable decisionId: Long, principal: Principal): ResponseEntity<*> {
+    fun getDecisionOptions(@PathVariable decisionId: Long, @RequestParam(required = false) calculatedScore: Boolean, principal: Principal): ResponseEntity<*> {
+
+        if (calculatedScore) decisionOptionsService.rateDecisionOptions(principal.name, decisionId)
 
         val decisions = decisionOptionsService.getDecisionOptions(principal.name, decisionId)
 
-        return ResponseEntity<Any>(decisions, HttpStatus.OK)
+        return if (calculatedScore)
+            ResponseEntity<Any>(decisions.sortedWith(compareBy({ it.score }, { it.name })).reversed(), HttpStatus.OK)
+        else
+            ResponseEntity<Any>(decisions.shuffled(), HttpStatus.OK)
+
     }
 
     @GetMapping("/{optionId}")
@@ -65,7 +71,7 @@ internal class DecisionOptionController(private val decisionOptionRepository: De
     fun createDecisionOption(@PathVariable decisionId: Long, @Valid @RequestBody decisionOption: DecisionOption,
                              principal: Principal): ResponseEntity<*> {
 
-        val decision  = decisionOptionsService.saveDecisionOption(principal.name, decisionId, decisionOption)
+        val decision = decisionOptionsService.saveDecisionOption(principal.name, decisionId, decisionOption)
 
         return if (decision != null) {
             ResponseEntity<Any>(decision, HttpStatus.CREATED)
@@ -77,9 +83,9 @@ internal class DecisionOptionController(private val decisionOptionRepository: De
 
     @PutMapping("/")
     fun editDecisionOption(@PathVariable decisionId: Long, @Valid @RequestBody decisionOption: DecisionOption,
-                             principal: Principal): ResponseEntity<*> {
+                           principal: Principal): ResponseEntity<*> {
 
-        val decision  = decisionOptionsService.saveDecisionOption(principal.name, decisionId, decisionOption)
+        val decision = decisionOptionsService.saveDecisionOption(principal.name, decisionId, decisionOption)
 
         return if (decision != null) {
             ResponseEntity<Any>(decision, HttpStatus.OK)
@@ -100,60 +106,5 @@ internal class DecisionOptionController(private val decisionOptionRepository: De
         }
 
     }
-
-    //refactor
-//    @GetMapping("/result/decisionOption/{decision_id}")
-//    fun decisionOptionSorted(@PathVariable decision_id: Long, principal: Principal): Collection<DecisionOption> {
-//
-//        //Sum weightedCriteria if it's not already summed
-//        selectionCriteriaController.weightCriteria(decision_id, principal)
-//
-//        //Get total sum
-//        val weightSum = weightedCriteriaRepository.findAll().filter {
-//            it.selectedCriteriaId== decision_id
-//        }.sumBy { abs(it.weight) }
-//
-//
-//        val decisionOptionRepositoryFiltered = decisionOptionRepository.findAll().filter {
-//            it.decision!!.user!!.username == principal.name &&
-//                    it.decision!!.id == decision_id
-//        }
-//
-//        val ratedOptionRepositoryFiltered = ratedOptionRepository.findAll().filter {
-//            it.decisionOption.decision!!.user!!.username == principal.name &&
-//                    it.selectionCriteria.decision!!.user!!.username == principal.name &&
-//
-//                    it.decisionOption.decision!!.id == decision_id &&
-//                    it.selectionCriteria.decision!!.id == decision_id
-//        }
-//
-//
-//
-//
-//        decisionOptionRepositoryFiltered.forEach { decisionOption ->
-//
-//            var score = 0.0
-//
-//            ratedOptionRepositoryFiltered.filter {
-//                it.decisionOption.id == decisionOption.id
-//            }.forEach { ratedOption ->
-//                val selectionCriteria = selectionCriteriaRepository.findById(ratedOption.selectionCriteria.id).get()
-//                score += ratedOption.rating * selectionCriteria.score
-//            }
-//
-//            //Round to one decimal
-//            score = if (weightSum == 0) 0.0 else (score / 10).toInt().toDouble() / 10
-//
-//            decisionOption.score = score
-//
-//            decisionOptionRepository.save(decisionOption)
-//
-//        }
-//
-//        return decisionOptionRepository.findAll().filter {
-//            it.decision!!.user!!.username == principal.name &&
-//                    it.decision!!.id == decision_id
-//        }.sortedWith(compareBy({ it.score }, { it.name })).reversed()
-//    }
 
 }

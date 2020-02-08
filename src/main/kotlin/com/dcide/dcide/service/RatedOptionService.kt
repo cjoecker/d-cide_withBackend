@@ -42,14 +42,14 @@ class RatedOptionService(private val ratedOptionRepository: RatedOptionRepositor
                 //Update ratedOption rating if found
                 if (filteredRatedOption.isNotEmpty()) {
                     ratedOptionLocal = filteredRatedOption[0]
-                    ratedOptionLocal.rating = ratedOption.rating
+                    ratedOptionLocal.score = ratedOption.score
                     ratedOptionLocal.decision = decision
 
                 } else {
                     //Create ratedOption if not found
                     ratedOptionLocal = RatedOption(
                             0,
-                            ratedOption.rating,
+                            ratedOption.score,
                             decisionOption.id,
                             selectionCriteria.id,
                             decision

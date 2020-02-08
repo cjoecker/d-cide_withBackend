@@ -12,6 +12,9 @@ class DecisionOptionService(private val decisionOptionRepository: DecisionOption
     @Autowired
     lateinit var decisionService: DecisionService
 
+    @Autowired
+    lateinit var selectionCriteriaService: SelectionCriteriaService
+
     fun getDecisionOptions(username: String, decisionId: Long): Iterable<DecisionOption> {
 
         val decisionOptions = decisionOptionRepository.findAll().filter {
@@ -56,7 +59,43 @@ class DecisionOptionService(private val decisionOptionRepository: DecisionOption
         }else{
             false
         }
+    }
 
+    fun rateDecisionOptions(username: String, decisionId: Long){
+
+        val decisionLocal = decisionService.getDecisionById(username, decisionId) ?: return
+
+        //weight selection criteria first
+        selectionCriteriaService.weightSelectionCriteria(username, decisionId)
+
+        val decisionOptions = decisionLocal.decisionOption
+        val weightedCriteria = decisionLocal.weightedCriteria
+        val ratedOptions = decisionLocal.ratedOption
+        val selectionCriteria = decisionLocal.selectionCriteria
+
+        //Get max sum of weighted criteria
+        val weightSum = weightedCriteria.sumBy { Math.abs(it.weight) }
+
+
+        decisionOptions.forEach { decisionOption ->
+
+            var score = 0.0
+
+            ratedOptions.filter {
+                it.decisionOptionId == decisionOption.id
+            }.forEach { ratedOption ->
+                val selectionCriteriaLocal = selectionCriteria.filter{it.id == ratedOption.selectionCriteriaId}
+                score += ratedOption.score * selectionCriteriaLocal[0].score
+            }
+
+            //Round to one decimal
+            score = if (weightSum == 0) 0.0 else (score / 10).toInt().toDouble() / 10
+
+            decisionOption.score = score
+
+            decisionOptionRepository.save(decisionOption)
+
+        }
 
     }
 

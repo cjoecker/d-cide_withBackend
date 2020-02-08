@@ -9,7 +9,7 @@ data class RatedOption(
         @Id @GeneratedValue(strategy = GenerationType.AUTO)
         val id: Long,
 
-        var rating: Int = 50,
+        var score: Int = 50,
 
         var decisionOptionId: Long,
         var selectionCriteriaId: Long,
