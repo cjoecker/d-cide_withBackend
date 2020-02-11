@@ -84,7 +84,7 @@ class UserService {
         //create new decision
         val newDecision = Decision(
                 null,
-                "Unregistered Decision",
+                "New Decision",
                 Date(),
                 Date(),
                 null
