@@ -30,7 +30,6 @@ paths:
                       name: Very important decisions
                     - id: 2
                       name: Just another decisions
-      description: ''
       tags:
         - Decisions
   '/decisions/{decisionId}/decisionOptions':
@@ -69,20 +68,15 @@ paths:
                     - id: 2
                       name: Not to be
                       score: 0
-      description: ''
-      parameters: []
-      operationId: ''
   '/decisions/{decisionId}/decisionOptions/{decisionOptionId}':
     parameters:
       - name: decisionId
         in: path
-        description: ''
         required: true
         schema:
           type: number
       - name: decisionOptionId
         in: path
-        description: ''
         required: true
         schema:
           type: number
@@ -124,7 +118,6 @@ paths:
                   name: To be
       tags:
         - Decision Options
-      operationId: ''
     put:
       summary: edit one decision option
       responses:
@@ -176,8 +169,7 @@ paths:
         - Decision Options
   /decisions/:
     post:
-      summary: post new decision
-      operationId: ''
+      summary: create one decision
       responses:
         '201':
           description: Created
@@ -195,7 +187,6 @@ paths:
                   value:
                     id: 1
                     name: very important decision
-      description: ''
       requestBody:
         content:
           application/json:
@@ -214,7 +205,6 @@ paths:
         - Decisions
     put:
       summary: edit decision
-      operationId: ''
       responses:
         '200':
           description: OK
@@ -269,7 +259,6 @@ paths:
       responses:
         '200':
           description: OK
-          headers: {}
           content:
             application/json:
               schema:
@@ -284,10 +273,6 @@ paths:
                   value:
                     id: 1
                     name: Very important decision
-      description: ''
-      parameters: []
-      operationId: ''
-      requestBody: {}
       tags:
         - Decisions
     parameters:
@@ -298,11 +283,9 @@ paths:
         required: true
     delete:
       summary: delete one decision
-      operationId: ''
       responses:
         '200':
           description: OK
-      requestBody: {}
       tags:
         - Decisions
   /users/:
@@ -313,21 +296,17 @@ paths:
       responses:
         '201':
           description: Created
-          headers: {}
           content:
             application/json:
               schema:
                 type: object
                 properties:
                   id:
-                    type:
-                      - string
-                      - number
+                    type: number
                   username:
                     type: string
                   fullName:
                     type: string
-      operationId: ''
       requestBody:
         content:
           application/json:
@@ -356,11 +335,9 @@ paths:
                   registeredUser: 'true'
                   password: spiderman
                   confirmPassword: spiderman
-      description: ''
   /sessions/:
     post:
-      summary: create session (user login)
-      operationId: ''
+      summary: create session (user login - anonym or not)
       responses:
         '201':
           description: Created
@@ -396,8 +373,6 @@ paths:
                 value:
                   username: peter@parker.com
                   password: spiderman
-        description: ''
-      description: ''
       tags:
         - Users
   /sessions/unregistered:
@@ -422,11 +397,9 @@ paths:
                   value:
                     success: true
                     token: Bearer eyJhbGciOiJIUzUxMiJ9.eyJyZWdpc3RlbbVkVXNlciI6ZmFsc2UsImZ1bGxOYW1lIjoiVW5yZWdpc3RlcmVkIFVzZXIgNzAiLCJpZCI6MTAyLCJleHAiOjE1NzU1MTk0NTQsImlhdCI6MTU3NTIxOTQ1NCwidXNlcm5hbWUiOiI3MEBVbnJlZ2lzdGVyZWRVc2VyLmNvbSJ9.Ff3p8ZW4FWXYUvzLXg3gNYWb101Ffm8rA9nnaU-6z8RUygAtxE1avgf91Vn9Uuz0YlA_toJi0HnSuyq6CVwNwQ
-      operationId: ''
   '/decisions/{decisionId}/selectionCriteria':
     parameters:
-      - type: string
-        name: decisionId
+      - name: decisionId
         in: path
         required: true
         schema:
@@ -460,17 +433,14 @@ paths:
                     - id: 2
                       name: Not to be
                       score: 0
-      description: ''
   '/decisions/{decisionId}/selectionCriteria/{decisionOptionId}':
     parameters:
-      - type: string
-        name: decisionId
+      - name: decisionId
         in: path
         required: true
         schema:
           type: number
-      - type: string
-        name: decisionOptionId
+      - name: decisionOptionId
         in: path
         required: true
         schema:
@@ -513,7 +483,6 @@ paths:
                   name: To be
       tags:
         - Selection Criteria
-      operationId: ''
     put:
       summary: edit one decision option
       responses:
