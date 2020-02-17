@@ -10,7 +10,7 @@ servers:
 paths:
   /decisions:
     get:
-      summary: get list of all decisions
+      summary: get all decisions
       responses:
         '200':
           description: OK
@@ -40,7 +40,7 @@ paths:
         schema:
           type: number
     get:
-      summary: get list of all decision options
+      summary: get all decision options
       tags:
         - Decision Options
       responses:
@@ -68,6 +68,13 @@ paths:
                     - id: 2
                       name: Not to be
                       score: 0
+      operationId: ''
+      parameters:
+        - schema:
+            type: boolean
+          in: query
+          name: calculatedRating
+          description: calculate decision options rating
   '/decisions/{decisionId}/decisionOptions/{decisionOptionId}':
     parameters:
       - name: decisionId
@@ -204,7 +211,7 @@ paths:
       tags:
         - Decisions
     put:
-      summary: edit decision
+      summary: edit one decision
       responses:
         '200':
           description: OK
@@ -290,7 +297,7 @@ paths:
         - Decisions
   /users/:
     post:
-      summary: create user (user signup)
+      summary: create one user (user signup)
       tags:
         - Users
       responses:
@@ -337,7 +344,7 @@ paths:
                   confirmPassword: spiderman
   /sessions/:
     post:
-      summary: create session (user login - anonym or not)
+      summary: create one session (user login - anonym or not)
       responses:
         '201':
           description: Created
@@ -377,7 +384,7 @@ paths:
         - Users
   /sessions/unregistered:
     post:
-      summary: create unregistered user (create anonym user)
+      summary: create one unregistered user session (create anonym user)
       tags:
         - Users
       responses:
@@ -405,7 +412,7 @@ paths:
         schema:
           type: number
     get:
-      summary: get list of all selection criteria
+      summary: get all selection criteria
       tags:
         - Selection Criteria
       responses:
@@ -433,6 +440,12 @@ paths:
                     - id: 2
                       name: Not to be
                       score: 0
+      parameters:
+        - schema:
+            type: boolean
+          in: query
+          name: calculatedRating
+          description: calculate selection criteria rating
   '/decisions/{decisionId}/selectionCriteria/{decisionOptionId}':
     parameters:
       - name: decisionId
@@ -532,5 +545,176 @@ paths:
           description: OK
       tags:
         - Selection Criteria
+  '/decisions/{decisionId}/weightedCriteria':
+    parameters:
+      - schema:
+          type: string
+        name: decisionId
+        in: path
+        required: true
+    get:
+      summary: get all weighted criteria
+      tags:
+        - Weighted Criteria
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: number
+                    weight:
+                      type: number
+                      description: |-
+                        If weight <= 0 Then selected criteria is selectionCriteria1Id
+                        If weight > 0 Then selected criteria is selectionCriteria2Id
+                    selectionCriteria1Id:
+                      type: number
+                    selectionCriteria2Id:
+                      type: number
+              examples:
+                Example:
+                  value:
+                    - id: 1
+                      weight: -27
+                      selectionCriteria1Id: 747
+                      selectionCriteria2Id: 746
+                    - id: 2
+                      weight: 0
+                      selectionCriteria1Id: 747
+                      selectionCriteria2Id: 745
+                    - id: 3
+                      weight: 100
+                      selectionCriteria1Id: 746
+                      selectionCriteria2Id: 745
+      operationId: ''
+    put:
+      summary: edit all weighted criteria
+      operationId: ''
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+              examples: {}
+      tags:
+        - Weighted Criteria
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: number
+                  weight:
+                    type: number
+                required:
+                  - id
+                  - weight
+            examples:
+              Example:
+                value:
+                  - id: 1
+                    weight: -27
+                  - id: 2
+                    weight: 0
+                  - id: 3
+                    weight: 100
+  '/decisions/{decisionId}/ratedOptions':
+    parameters:
+      - schema:
+          type: string
+        name: decisionId
+        in: path
+        required: true
+    get:
+      summary: get all rated options
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: number
+                    score:
+                      type: number
+                      description: ''
+                    decisionOptionId:
+                      type: number
+                    selectionCriteriaId:
+                      type: number
+              examples:
+                Example:
+                  value:
+                    - id: 1
+                      score: 0
+                      decisionOptionId: 1
+                      selectionCriteriaId: 1
+                    - id: 2
+                      score: 10
+                      decisionOptionId: 1
+                      selectionCriteriaId: 2
+                    - id: 3
+                      score: 100
+                      decisionOptionId: 1
+                      selectionCriteriaId: 3
+      operationId: ''
+      tags:
+        - Rated Options
+    put:
+      summary: edit all rated options
+      operationId: ''
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+              examples: {}
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  rating:
+                    type: number
+                  decisionOptionId:
+                    type: number
+                  selectionCriteriaId:
+                    type: number
+                required:
+                  - rating
+                  - decisionOptionId
+                  - selectionCriteriaId
+            examples:
+              Example:
+                value:
+                  - rating: 23
+                    decisionOptionId: 7
+                    selectionCriteriaId: 5
+                  - rating: 100
+                    decisionOptionId: 7
+                    selectionCriteriaId: 6
+      tags:
+        - Rated Options
 components:
   schemas: {}
