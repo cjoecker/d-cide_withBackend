@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+
+  d-cide:
+    image: docker.maibornwolff.de/mw/d-cide:latest
+    labels:
+      - "traefik.backend=d-cide"
+      - "traefik.frontend.rule=Host:d-cide${URL_POSTFIX}.maibornwolff.de"
+    environment:
+      - "JAVA_OPTS=-Xmx256m -Xms128m"
+    user: ${DOCKER_USER}
+    networks:
+      - docker_default
+    restart: unless-stopped
+
+networks:
+  docker_default:
+    external:
+      name: docker_default
