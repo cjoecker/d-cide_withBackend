@@ -33,11 +33,11 @@ internal class WeightedCriteriaController(private val weightedCriteriaRepository
         return ResponseEntity<Any>(weightedCriteria, HttpStatus.OK)
     }
 
-    @PutMapping("")
-    fun saveAllWeightedCriteria(@PathVariable decisionId: Long, @Valid @RequestBody weightedCriteriaList: List<WeightedCriteria>,
+    @PutMapping("/")
+    fun saveAllWeightedCriteria(@PathVariable decisionId: Long, @Valid @RequestBody weightedCriteria: WeightedCriteria,
                                 principal: Principal): ResponseEntity<*> {
 
-        weightedCriteriaService.saveWeightedCriteria(principal.name, decisionId, weightedCriteriaList)
+        weightedCriteriaService.saveWeightedCriteria(principal.name, decisionId, weightedCriteria)
 
         return ResponseEntity<Any>(null, HttpStatus.OK)
 

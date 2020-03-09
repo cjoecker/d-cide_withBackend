@@ -593,43 +593,6 @@ paths:
                       selectionCriteria1Id: 746
                       selectionCriteria2Id: 745
       operationId: ''
-    put:
-      summary: edit all weighted criteria
-      operationId: ''
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-              examples: {}
-      tags:
-        - Weighted Criteria
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: array
-              items:
-                type: object
-                properties:
-                  id:
-                    type: number
-                  weight:
-                    type: number
-                required:
-                  - id
-                  - weight
-            examples:
-              Example:
-                value:
-                  - id: 1
-                    weight: -27
-                  - id: 2
-                    weight: 0
-                  - id: 3
-                    weight: 100
   '/decisions/{decisionId}/ratedOptions':
     parameters:
       - schema:
@@ -676,8 +639,53 @@ paths:
       operationId: ''
       tags:
         - Rated Options
+  '/decisions/{decisionId}/weightedCriteria/':
+    parameters:
+      - schema:
+          type: string
+        name: decisionId
+        in: path
+        required: true
     put:
-      summary: edit all rated options
+      summary: edit one weighted criteria
+      operationId: ''
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+              examples: {}
+      tags:
+        - Weighted Criteria
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: number
+                weight:
+                  type: number
+              required:
+                - id
+                - weight
+            examples:
+              Example:
+                value:
+                  id: 1
+                  weight: -27
+  '/decisions/{decisionId}/ratedOptions/':
+    parameters:
+      - schema:
+          type: string
+        name: decisionId
+        in: path
+        required: true
+    put:
+      summary: edit one rated option
       operationId: ''
       responses:
         '200':
@@ -691,29 +699,24 @@ paths:
         content:
           application/json:
             schema:
-              type: array
-              items:
-                type: object
-                properties:
-                  rating:
-                    type: number
-                  decisionOptionId:
-                    type: number
-                  selectionCriteriaId:
-                    type: number
-                required:
-                  - rating
-                  - decisionOptionId
-                  - selectionCriteriaId
+              type: object
+              required:
+                - rating
+                - decisionOptionId
+                - selectionCriteriaId
+              properties:
+                rating:
+                  type: number
+                decisionOptionId:
+                  type: number
+                selectionCriteriaId:
+                  type: number
             examples:
               Example:
                 value:
-                  - rating: 23
-                    decisionOptionId: 7
-                    selectionCriteriaId: 5
-                  - rating: 100
-                    decisionOptionId: 7
-                    selectionCriteriaId: 6
+                  rating: 23
+                  decisionOptionId: 7
+                  selectionCriteriaId: 5
       tags:
         - Rated Options
 components:

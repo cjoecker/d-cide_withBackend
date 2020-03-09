@@ -22,12 +22,12 @@ class WeightedCriteriaService(private val weightedCriteriaRepository: WeightedCr
 
 
         //get old weighted criteria
-        val weightedCriteriaOld = weightedCriteriaRepository.findAll().filter {
+        val weightedCriteriaListOld = weightedCriteriaRepository.findAll().filter {
             it.decision?.id == decision.id
         }
 
 
-        val weightedCriteriaNew: MutableList<WeightedCriteria> = mutableListOf()
+        val weightedCriteriaListNew: MutableList<WeightedCriteria> = mutableListOf()
 
         val selectionCriteriaList = selectionCriteriaService.getSelectionCriteria(username, decisionId).toList()
 
@@ -42,7 +42,7 @@ class WeightedCriteriaService(private val weightedCriteriaRepository: WeightedCr
                 var weight = 0
 
                 //Get old values
-                val filteredCriteria = weightedCriteriaOld.filter {
+                val filteredCriteria = weightedCriteriaListOld.filter {
                     it.selectionCriteria1Id == selectionCriteriaList[i].id &&
                             it.selectionCriteria2Id == selectionCriteriaList[j].id
                 }
@@ -62,12 +62,12 @@ class WeightedCriteriaService(private val weightedCriteriaRepository: WeightedCr
                         decision
                 )
 
-                weightedCriteriaNew.add(weightedCriteria)
+                weightedCriteriaListNew.add(weightedCriteria)
             }
         }
 
         //Update Data
-        weightedCriteriaRepository.saveAll(weightedCriteriaNew)
+        weightedCriteriaRepository.saveAll(weightedCriteriaListNew)
 
     }
 
@@ -90,15 +90,13 @@ class WeightedCriteriaService(private val weightedCriteriaRepository: WeightedCr
     }
 
 
-    fun saveWeightedCriteria(username: String, decisionId: Long, weightedCriteriaList: List<WeightedCriteria>) {
+    fun saveWeightedCriteria(username: String, decisionId: Long, weightedCriteria: WeightedCriteria) {
 
-        weightedCriteriaList.forEach {
-            val weightedCriteria = getWeightedCriteriaById(username,decisionId, it.id)
+        val weightedCriteriaLocal = getWeightedCriteriaById(username, decisionId, weightedCriteria.id)
 
-            if (weightedCriteria != null ) {
-                weightedCriteria.weight = it.weight
-                weightedCriteriaRepository.save(weightedCriteria)
-            }
+        if (weightedCriteriaLocal != null ) {
+            weightedCriteriaLocal.weight = weightedCriteria.weight
+            weightedCriteriaRepository.save(weightedCriteriaLocal)
         }
 
     }
