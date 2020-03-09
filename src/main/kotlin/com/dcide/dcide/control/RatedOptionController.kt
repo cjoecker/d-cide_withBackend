@@ -28,11 +28,11 @@ internal class RatedOptionController(private val ratedOptionRepository: RatedOpt
     }
 
     @PutMapping("")
-    fun saveAllWeightedCriteria(@PathVariable decisionId: Long, @Valid @RequestBody ratedOptionList: List<RatedOption>,
+    fun saveRatedOption(@PathVariable decisionId: Long, @Valid @RequestBody ratedOption: RatedOption,
                                 principal: Principal): ResponseEntity<*> {
 
 
-        ratedOptionService.saveRatedOption(principal.name, decisionId, ratedOptionList)
+        ratedOptionService.saveRatedOption(principal.name, decisionId, ratedOption)
 
         return ResponseEntity<Any>(null, HttpStatus.OK)
 
