@@ -32,7 +32,7 @@ class SessionsController {
         return if (jwt != null) {
             ResponseEntity<Any>(JwtLoginSucessResponse(true, jwt), HttpStatus.CREATED)
         } else {
-            ResponseEntity<Any>(null, HttpStatus.BAD_REQUEST)
+            ResponseEntity<Any>(null, HttpStatus.UNAUTHORIZED)
         }
     }
 
