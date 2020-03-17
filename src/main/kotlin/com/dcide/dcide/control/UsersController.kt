@@ -25,7 +25,6 @@ class UsersController {
     lateinit var userValidator: UserValidator
 
 
-    //opid-post-users
     @PostMapping("/")
     fun createUser(@Valid @RequestBody user: User, result: BindingResult): ResponseEntity<*> {
 
