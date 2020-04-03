@@ -8,6 +8,6 @@ object SecurityConstants {
     const val SECRET = "SecretKeyToGenJWTs"
     const val TOKEN_PREFIX = "Bearer " //Space needs to be at the end!
     const val HEADER_STRING = "Authorization"
-    const val EXPIRATION_TIME: Long = 300000000 //30 seconds
+    const val EXPIRATION_TIME: Long = 3000000000 //30 seconds
 }
 
