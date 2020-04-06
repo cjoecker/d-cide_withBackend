@@ -50,7 +50,7 @@ internal class DecisionOptionController(private val decisionOptionRepository: De
         return if (calculatedScore)
             ResponseEntity<Any>(decisions.sortedWith(compareBy({ it.score }, { it.name })).reversed(), HttpStatus.OK)
         else
-            ResponseEntity<Any>(decisions.shuffled(), HttpStatus.OK)
+            ResponseEntity<Any>(decisions.sortedWith(compareBy({ it.id }, { it.name })).reversed(), HttpStatus.OK)
 
     }
 

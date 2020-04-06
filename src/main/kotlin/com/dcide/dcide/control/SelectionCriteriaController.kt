@@ -29,9 +29,9 @@ internal class SelectionCriteriaController(private val selectionCriteriaReposito
         val criteria = selectionCriteriaService.getSelectionCriteria(principal.name, decisionId)
 
         return if (calculatedScore)
-            ResponseEntity<Any>(criteria.sortedWith(compareBy { it.score }).reversed(), HttpStatus.OK)
+            ResponseEntity<Any>(criteria.sortedWith(compareBy ( {it.score }, { it.name })).reversed(), HttpStatus.OK)
         else
-            ResponseEntity<Any>(criteria.shuffled(), HttpStatus.OK)
+            ResponseEntity<Any>(criteria.sortedWith(compareBy ( {it.id }, { it.name })).reversed(), HttpStatus.OK)
     }
 
     @GetMapping("/{optionId}")
