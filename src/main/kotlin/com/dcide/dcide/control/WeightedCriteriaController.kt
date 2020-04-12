@@ -30,7 +30,7 @@ internal class WeightedCriteriaController(private val weightedCriteriaRepository
 
         val weightedCriteria = weightedCriteriaService.getWeightedCriteria(principal.name, decisionId)
 
-        return ResponseEntity<Any>(weightedCriteria, HttpStatus.OK)
+        return ResponseEntity<Any>(weightedCriteria?.shuffled(), HttpStatus.OK)
     }
 
     @PutMapping("/")
