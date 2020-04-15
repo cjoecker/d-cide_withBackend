@@ -314,6 +314,12 @@ paths:
                     type: string
                   fullName:
                     type: string
+              examples:
+                Example:
+                  value:
+                    id: 99
+                    username: peter@parker.com
+                    fullName: Peter Parker
       requestBody:
         content:
           application/json:
@@ -339,9 +345,7 @@ paths:
                 value:
                   username: peter@parker.com
                   fullName: Peter Parker
-                  registeredUser: 'true'
-                  password: spiderman
-                  confirmPassword: spiderman
+                  id: 69
   /sessions/:
     post:
       summary: create one session (user login - anonym or not)
