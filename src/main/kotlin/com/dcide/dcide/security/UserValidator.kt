@@ -18,7 +18,7 @@ class UserValidator : Validator {
 
         val user = `object` as User
 
-        if (user.password.length < 6) errors.rejectValue("password", "Length", "Password must be at least 6 characters")
+        if (user.password.length < 6) errors.rejectValue("password", "Length", "Password must have at least 6 characters")
 
         if (user.password != user.confirmPassword) {
             errors.rejectValue("confirmPassword", "Match", "Passwords must match")
