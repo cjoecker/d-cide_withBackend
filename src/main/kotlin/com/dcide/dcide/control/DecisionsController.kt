@@ -8,9 +8,6 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
-import javax.validation.Valid
-import java.net.URISyntaxException
-
 
 import org.springframework.web.bind.annotation.GetMapping
 import java.security.Principal
@@ -29,52 +26,10 @@ internal class DecisionsController(private val decisionRepository: DecisionRepos
     @GetMapping("")
     fun getDecisions(principal: Principal): ResponseEntity<*>  {
 
-        val decisions  = decisionService.getDecisions(principal.name)
+        val decisions  = decisionService.getDecisionsByUser(principal.name)
 
         return ResponseEntity<Any>(decisions, HttpStatus.OK)
 
     }
-
-
-    @PostMapping("/")
-    @Throws(URISyntaxException::class)
-    fun createDecision(@Valid @RequestBody decision: Decision, principal: Principal): ResponseEntity<*> {
-
-        val decision  = decisionService.saveDecision(principal.name, decision)
-
-        return if (decision != null) {
-            ResponseEntity<Any>(decision, HttpStatus.CREATED)
-        } else {
-            ResponseEntity<Any>(null, HttpStatus.BAD_REQUEST)
-        }
-    }
-
-
-    @DeleteMapping("/{decisionsId}")
-    fun deleteDecision(@PathVariable decisionsId: Long, principal: Principal): ResponseEntity<*> {
-
-        return if (decisionService.deleteDecision(principal.name, decisionsId)) {
-            ResponseEntity<Any>(null, HttpStatus.OK)
-        } else {
-            ResponseEntity<Any>(null, HttpStatus.NOT_FOUND)
-        }
-
-    }
-
-
-    @PutMapping("/")
-    @Throws(URISyntaxException::class)
-    fun updateDecision(@Valid @RequestBody decision: Decision, principal: Principal): ResponseEntity<*> {
-
-        val decision  = decisionService.saveDecision(principal.name, decision)
-
-        return if (decision != null) {
-            ResponseEntity<Any>(decision, HttpStatus.OK)
-        } else {
-            ResponseEntity<Any>(null, HttpStatus.BAD_REQUEST)
-        }
-    }
-
-
 
 }

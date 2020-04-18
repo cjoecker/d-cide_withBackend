@@ -19,16 +19,12 @@ class CustomUserDetailsService : UserDetailsService {
     lateinit var userRepository: UserRepository
 
     override fun loadUserByUsername(username: String): UserDetails? {
-        val user = userRepository.findByUsername(username)
-        if (user == null) UsernameNotFoundException("User not found")
-        return user
+        return userRepository.findByUsername(username)
     }
 
     @Transactional
     fun loadUserById(id: Long?): User? {
-        val user = userRepository.getById(id)
-        if (user == null) UsernameNotFoundException("User not found")
-        return user
+        return userRepository.getById(id)
 
     }
 }

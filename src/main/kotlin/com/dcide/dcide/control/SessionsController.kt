@@ -20,24 +20,6 @@ class SessionsController {
     @Autowired
     lateinit var userService: UserService
 
-
-    //opid-post-sessions
-    @PostMapping("/")
-    fun authenticateUser(@Valid @RequestBody loginRequest: LoginRequest, result: BindingResult): ResponseEntity<*> {
-        val errorMap = mapValidationErrorService.MapValidationService(result)
-        if (errorMap != null) return errorMap
-
-        val jwt = userService.getJWTToken(userService.authenticateUser(loginRequest.username, loginRequest.password))
-
-        return if (jwt != null) {
-            ResponseEntity<Any>(JwtLoginSucessResponse(true, jwt), HttpStatus.CREATED)
-        } else {
-            ResponseEntity<Any>(null, HttpStatus.UNAUTHORIZED)
-        }
-    }
-
-
-    //opid-get-sessions-unregistered
     @PostMapping("/unregistered")
     fun createUnregisteredUsers(): ResponseEntity<*> {
 

@@ -27,7 +27,7 @@ class DecisionService(private val decisionRepository: DecisionRepository) {
 
 
 
-    fun getDecisions(username: String): Iterable<Decision> {
+    fun getDecisionsByUser(username: String): Iterable<Decision> {
 
         val decisions = decisionRepository.findAll().filter {
             it.user?.username == username
@@ -45,16 +45,12 @@ class DecisionService(private val decisionRepository: DecisionRepository) {
 
 
     fun saveDecision(username: String, decision: Decision): Decision? {
-
-        //Authenticate Decision
         if (decision.id != null && getDecisionById(username, decision.id!!) == null)
             return null
 
         if(decision.user == null){
-            //Save to user
             decision.user = userRepository.findByUsername(username)
         }else{
-            //Transfer to user
             if(userService.authenticateUser(decision.user!!.username, decision.user!!.password).isAuthenticated){
                 decision.user = userRepository.findByUsername(decision.user!!.username)
            }
@@ -63,44 +59,27 @@ class DecisionService(private val decisionRepository: DecisionRepository) {
         return decisionRepository.save(decision)
     }
 
-    // refactor
-    fun deleteDecision(username: String, decisionsId: Long): Boolean {
 
-        val decision = getDecisionById(username, decisionsId)
-
-        return if (decision?.id != null) {
-
-            //Delete Decision
-            decisionRepository.deleteById(decisionsId)
-            true
-        } else {
-            false
-        }
-
+    fun createExampleData(username: String, decision: Decision) {
+        createTestDecisionOptions(username, decision)
+        createTestSelectionCriteria(username, decision)
     }
 
-    //refactor
-    fun createExampleData(username: String, decision: Decision) {
-
-
-        //Create test decision options
-        Stream.of("House in pleasant street", "House in seldom seen avenue", "House in yellowsnow road").forEach { decisionOption ->
+    fun createTestDecisionOptions(username: String, decision: Decision) {
+        Stream.of("House 3", "House 2", "House 1").forEach { decisionOption ->
             decisionOptionRepository.save(
                     DecisionOption(0, decisionOption, 0.0, decision)
             )
         }
+    }
 
-
-        //Create test selection criteria
+    fun createTestSelectionCriteria(username: String, decision: Decision) {
         Stream.of("Garden", "Kitchen", "Neighborhood", "Size").forEach { selectionCriteria ->
             selectionCriteriaRepository.save(
                     SelectionCriteria(0, selectionCriteria, 0.0, decision)
             )
         }
-
-
     }
-
 
 
 

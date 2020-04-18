@@ -15,8 +15,6 @@ import java.time.LocalDateTime
 class JwtTokenProvider {
 
 
-    //Generate the token
-
     fun generateToken(authentication: Authentication): String {
         val user: User = authentication.principal as User
         val now = Date(System.currentTimeMillis())
@@ -40,7 +38,6 @@ class JwtTokenProvider {
                 .compact()
     }
 
-    //Validate the token
     fun validateToken(token: String): Boolean {
         try {
             Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token)
@@ -60,7 +57,6 @@ class JwtTokenProvider {
         return false
     }
 
-    //Get user Id from token
     fun getUserIdFromJWT(token: String): Long? {
         val claims = Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token).body
         val id = claims["id"].toString()

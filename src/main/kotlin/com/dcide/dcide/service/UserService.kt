@@ -39,11 +39,10 @@ class UserService {
 
     fun saveUser(newUser: User): User {
 
-
         try {
             newUser.password = bCryptPasswordEncoder.encode(newUser.password)
 
-            //User has to be unique (exception)
+            //User has to be unique (throw exception)
             newUser.username = newUser.username
 
             //Don't give back the password
@@ -60,12 +59,10 @@ class UserService {
 
     fun createUnregisteredUser():String?{
 
-        //Get number of unregistered users
         val unregisteredUsersNum = userRepository.findAll().filter {
             !it.registeredUser
         }.count() + 1
 
-        //create new unregistered user
         val password = UUID.randomUUID().toString().substring(0,15)
 
         val newUser = User(
@@ -81,7 +78,12 @@ class UserService {
 
         saveUser(newUser)
 
-        //create new decision
+        createDecisionForUnregisteredUser(newUser)
+
+        return getJWTToken(authenticateUser(newUser.username, password))
+    }
+
+    fun createDecisionForUnregisteredUser(newUser:User){
         val newDecision = Decision(
                 null,
                 "New Decision",
@@ -92,15 +94,10 @@ class UserService {
 
         val createdDecision = decisionService.saveDecision(newUser.username, newDecision)
 
-        //create example data
         if (createdDecision != null) {
             decisionService.createExampleData(newUser.username, createdDecision)
         }
-
-        //authenticate user
-        return getJWTToken(authenticateUser(newUser.username, password))
     }
-
 
     fun authenticateUser(username: String, password: String): Authentication {
 

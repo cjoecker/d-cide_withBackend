@@ -23,9 +23,5 @@ class UserValidator : Validator {
         if (user.password != user.confirmPassword) {
             errors.rejectValue("confirmPassword", "Match", "Passwords must match")
         }
-
-        if (user.password != user.confirmPassword) {
-            errors.rejectValue("confirmPassword", "Match", "Passwords must match")
-        }
     }
 }
