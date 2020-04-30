@@ -3,14 +3,17 @@ package com.dcide.dcide.service
 import com.dcide.dcide.model.Decision
 import com.dcide.dcide.model.User
 import com.dcide.dcide.model.UserRepository
-import com.dcide.dcide.security.*
-import org.springframework.stereotype.Service
+import com.dcide.dcide.security.JwtTokenProvider
+import com.dcide.dcide.security.MapValidationErrorService
+import com.dcide.dcide.security.SecurityConstants
+import com.dcide.dcide.security.UsernameAlreadyExistsException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.stereotype.Service
 import java.util.*
 
 
@@ -21,7 +24,7 @@ class UserService {
     lateinit var decisionService: DecisionService
 
     @Autowired
-    lateinit  var userRepository: UserRepository
+    lateinit var userRepository: UserRepository
 
     @Autowired
     lateinit var authenticationManager: AuthenticationManager
@@ -30,11 +33,10 @@ class UserService {
     lateinit var mapValidationErrorService: MapValidationErrorService
 
     @Autowired
-    lateinit  var bCryptPasswordEncoder: BCryptPasswordEncoder
+    lateinit var bCryptPasswordEncoder: BCryptPasswordEncoder
 
     @Autowired
     lateinit var tokenProvider: JwtTokenProvider
-
 
 
     fun saveUser(newUser: User): User {
@@ -50,20 +52,21 @@ class UserService {
 
             return userRepository.save(newUser)
 
-        }catch (e: Exception){
+        } catch (e: Exception) {
             throw UsernameAlreadyExistsException("Username ${newUser.username} already exists!")
 
         }
 
     }
 
-    fun createUnregisteredUser():String?{
+
+    fun createUnregisteredUser(): String? {
 
         val unregisteredUsersNum = userRepository.findAll().filter {
             !it.registeredUser
         }.count() + 1
 
-        val password = UUID.randomUUID().toString().substring(0,15)
+        val password = UUID.randomUUID().toString().substring(0, 15)
 
         val newUser = User(
                 0,
@@ -83,7 +86,7 @@ class UserService {
         return getJWTToken(authenticateUser(newUser.username, password))
     }
 
-    fun createDecisionForUnregisteredUser(newUser:User){
+    fun createDecisionForUnregisteredUser(newUser: User) {
         val newDecision = Decision(
                 null,
                 "New Decision",
@@ -109,13 +112,11 @@ class UserService {
         )
     }
 
-
-    fun getJWTToken(authentication : Authentication) : String?{
+    fun getJWTToken(authentication: Authentication): String? {
 
         SecurityContextHolder.getContext().authentication = authentication
 
         return SecurityConstants.TOKEN_PREFIX + tokenProvider.generateToken(authentication)
-
     }
 
 }
