@@ -59,7 +59,6 @@ class UserService {
 
     }
 
-
     fun createUnregisteredUser(): String? {
 
         val unregisteredUsersNum = userRepository.findAll().filter {
