@@ -1,7 +1,8 @@
 package com.dcide.dcide.service
 
 
-import com.dcide.dcide.model.*
+import com.dcide.dcide.model.DecisionOption
+import com.dcide.dcide.model.DecisionOptionRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -61,7 +62,7 @@ class DecisionOptionService(private val decisionOptionRepository: DecisionOption
         }
     }
 
-    fun rateDecisionOptions(username: String, decisionId: Long){
+    fun calculateDecisionOptionsScore(username: String, decisionId: Long){
 
         val decisionLocal = decisionService.getDecisionById(username, decisionId) ?: return
 

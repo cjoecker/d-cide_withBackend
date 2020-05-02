@@ -1,6 +1,5 @@
 package com.dcide.dcide
 
-
 import com.dcide.dcide.model.User
 import com.dcide.dcide.model.UserRepository
 import com.dcide.dcide.service.*
@@ -15,7 +14,7 @@ import java.util.*
 
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-abstract class DCideApplicationTests {
+class DCideApplicationTests {
 
     @Autowired
     lateinit var userService: UserService
@@ -58,22 +57,6 @@ abstract class DCideApplicationTests {
         decisionId = decisionService.getDecisionsByUser(username).toList()[0].id!!
     }
 
-    fun createTestUser(username: String) {
-        val newUser = User(
-                0,
-                true,
-                username,
-                "Test User",
-                "TestUser123",
-                "TestUser123",
-                Date(),
-                Date()
-        )
-        userService.saveUser(newUser)
-        userService.createDecisionForUnregisteredUser(newUser)
-
-    }
-
     @Test
     fun calculatesDecisionOptionScore() {
 
@@ -81,7 +64,7 @@ abstract class DCideApplicationTests {
 
 		rateOptions()
 
-		decisionOptionService.rateDecisionOptions(username, decisionId)
+		decisionOptionService.calculateDecisionOptionsScore(username, decisionId)
 
 		val decisionOptions = decisionOptionService
 				.getDecisionOptions(username, decisionId)
@@ -98,6 +81,22 @@ abstract class DCideApplicationTests {
 				assertTrue("right score for House 3", decisionOptionLocal.score.toInt() == 0)
 
 		}
+    }
+
+    fun createTestUser(username: String) {
+        val newUser = User(
+                0,
+                true,
+                username,
+                "Test User",
+                "TestUser123",
+                "TestUser123",
+                Date(),
+                Date()
+        )
+        userService.saveUser(newUser)
+        userService.createDecisionForUnregisteredUser(newUser)
+
     }
 
     fun weightCriteria() {

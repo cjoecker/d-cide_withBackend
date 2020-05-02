@@ -4,18 +4,11 @@ package com.dcide.dcide.control
 import com.dcide.dcide.model.*
 import com.dcide.dcide.service.DecisionOptionService
 import org.springframework.beans.factory.annotation.Autowired
-
-
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-
-import javax.validation.Valid
-
-
-import org.springframework.web.bind.annotation.GetMapping
-import java.lang.Math.abs
 import java.security.Principal
+import javax.validation.Valid
 
 
 @RestController
@@ -43,7 +36,7 @@ internal class DecisionOptionController(private val decisionOptionRepository: De
     @GetMapping("")
     fun getDecisionOptions(@PathVariable decisionId: Long, @RequestParam(required = false) calculatedScore: Boolean, principal: Principal): ResponseEntity<*> {
 
-        if (calculatedScore) decisionOptionsService.rateDecisionOptions(principal.name, decisionId)
+        if (calculatedScore) decisionOptionsService.calculateDecisionOptionsScore(principal.name, decisionId)
 
         val decisions = decisionOptionsService.getDecisionOptions(principal.name, decisionId)
 
