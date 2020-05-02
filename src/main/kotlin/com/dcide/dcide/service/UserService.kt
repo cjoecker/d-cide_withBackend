@@ -93,9 +93,8 @@ class UserService {
 
         val createdDecision = decisionService.saveDecision(newUser.username, newDecision)
 
-        if (createdDecision != null) {
-            decisionService.createExampleData(newUser.username, createdDecision)
-        }
+        decisionService.createExampleData(newUser.username, createdDecision!!)
+
     }
 
     fun authenticateUser(username: String, password: String): Authentication {

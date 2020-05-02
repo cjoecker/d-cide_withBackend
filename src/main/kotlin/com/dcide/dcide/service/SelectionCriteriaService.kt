@@ -5,6 +5,7 @@ import com.dcide.dcide.model.SelectionCriteria
 import com.dcide.dcide.model.SelectionCriteriaRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import kotlin.math.abs
 
 
 @Service
@@ -75,11 +76,9 @@ class SelectionCriteriaService(private val selectionCriteriaRepository: Selectio
         val weightedCriteria = decisionLocal.weightedCriteria
         val selectionCriteria = decisionLocal.selectionCriteria
 
-        //Get max sum of weighted criteria
-        val weightSum = weightedCriteria.sumBy { Math.abs(it.weight) }
+        val weightSum = weightedCriteria.sumBy { abs(it.weight) }
 
 
-        //Sum Values
         selectionCriteria.forEach { selectionCriteria ->
 
             var score = weightedCriteria.filter {

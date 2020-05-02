@@ -66,7 +66,6 @@ class DecisionOptionService(private val decisionOptionRepository: DecisionOption
 
         val decisionLocal = decisionService.getDecisionById(username, decisionId) ?: return
 
-        //weight selection criteria first
         selectionCriteriaService.weightSelectionCriteria(username, decisionId)
 
         val decisionOptions = decisionLocal.decisionOption
