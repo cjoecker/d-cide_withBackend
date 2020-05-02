@@ -2,9 +2,6 @@ package com.dcide.dcide.service
 
 
 import com.dcide.dcide.model.*
-import com.dcide.dcide.service.WeightedCriteriaService
-
-import com.dcide.dcide.model.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.stream.Stream
@@ -24,7 +21,6 @@ class DecisionService(private val decisionRepository: DecisionRepository) {
 
     @Autowired
     lateinit var selectionCriteriaRepository: SelectionCriteriaRepository
-
 
 
     fun getDecisionsByUser(username: String): Iterable<Decision> {
@@ -48,12 +44,12 @@ class DecisionService(private val decisionRepository: DecisionRepository) {
         if (decision.id != null && getDecisionById(username, decision.id!!) == null)
             return null
 
-        if(decision.user == null){
+        if (decision.user == null) {
             decision.user = userRepository.findByUsername(username)
-        }else{
-            if(userService.authenticateUser(decision.user!!.username, decision.user!!.password).isAuthenticated){
+        } else {
+            if (userService.authenticateUser(decision.user!!.username, decision.user!!.password).isAuthenticated) {
                 decision.user = userRepository.findByUsername(decision.user!!.username)
-           }
+            }
         }
 
         return decisionRepository.save(decision)
@@ -81,6 +77,9 @@ class DecisionService(private val decisionRepository: DecisionRepository) {
         }
     }
 
+    fun deleteAllDecisions(username: String) {
+        decisionRepository.deleteAll(getDecisionsByUser(username))
+    }
 
 
 }

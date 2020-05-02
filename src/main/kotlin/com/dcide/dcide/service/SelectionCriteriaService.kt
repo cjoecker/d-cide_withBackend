@@ -1,7 +1,8 @@
 package com.dcide.dcide.service
 
 
-import com.dcide.dcide.model.*
+import com.dcide.dcide.model.SelectionCriteria
+import com.dcide.dcide.model.SelectionCriteriaRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -29,9 +30,9 @@ class SelectionCriteriaService(private val selectionCriteriaRepository: Selectio
     }
 
 
-    fun getSelectionCriteriaById(username: String, decisionId: Long, optionId: Long): SelectionCriteria? {
+    fun getSelectionCriteriaById(username: String, decisionId: Long, criteriaId: Long): SelectionCriteria? {
 
-        return selectionCriteriaRepository.findById(optionId).filter {
+        return selectionCriteriaRepository.findById(criteriaId).filter {
             it.decision?.user?.username == username &&
                     it.decision?.id == decisionId
         }.orElse(null)

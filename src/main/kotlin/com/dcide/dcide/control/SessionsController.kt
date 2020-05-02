@@ -2,6 +2,7 @@ package com.dcide.dcide.control
 
 import com.dcide.dcide.security.JwtLoginSucessResponse
 import com.dcide.dcide.service.UserService
+import com.dcide.dcide.service.WeightedCriteriaService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -16,6 +17,11 @@ class SessionsController {
 
     @Autowired
     lateinit var userService: UserService
+
+    @Autowired
+    lateinit var weightedCriteriaService: WeightedCriteriaService
+
+
 
     @PostMapping("/unregistered")
     fun createUnregisteredUsers(): ResponseEntity<*> {

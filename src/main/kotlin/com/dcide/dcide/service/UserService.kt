@@ -4,7 +4,7 @@ import com.dcide.dcide.model.Decision
 import com.dcide.dcide.model.User
 import com.dcide.dcide.model.UserRepository
 import com.dcide.dcide.security.JwtTokenProvider
-import com.dcide.dcide.security.MapValidationErrorService
+
 import com.dcide.dcide.security.SecurityConstants
 import com.dcide.dcide.security.UsernameAlreadyExistsException
 import org.springframework.beans.factory.annotation.Autowired
@@ -28,9 +28,6 @@ class UserService {
 
     @Autowired
     lateinit var authenticationManager: AuthenticationManager
-
-    @Autowired
-    lateinit var mapValidationErrorService: MapValidationErrorService
 
     @Autowired
     lateinit var bCryptPasswordEncoder: BCryptPasswordEncoder
