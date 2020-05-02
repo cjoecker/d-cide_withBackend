@@ -78,13 +78,13 @@ class DCideApplicationTests {
         decisionOptions.forEach { decisionOptionLocal ->
 
             if (decisionOptionLocal.name == "House 1")
-                assertTrue("right score for House 1", decisionOptionLocal.score.toInt() == 10)
+                assertTrue("right score for House 1", decisionOptionLocal.score == 10.0)
 
             if (decisionOptionLocal.name == "House 2")
-                assertTrue("right score for House 2", decisionOptionLocal.score.toInt() == 5)
+                assertTrue("right score for House 2", decisionOptionLocal.score == 5.0)
 
             if (decisionOptionLocal.name == "House 3")
-                assertTrue("right score for House 3", decisionOptionLocal.score.toInt() == 0)
+                assertTrue("right score for House 3", decisionOptionLocal.score == 0.0)
 
         }
     }

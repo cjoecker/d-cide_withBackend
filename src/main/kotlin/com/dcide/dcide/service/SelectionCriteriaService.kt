@@ -5,7 +5,7 @@ import com.dcide.dcide.model.SelectionCriteria
 import com.dcide.dcide.model.SelectionCriteriaRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import kotlin.math.abs
+import kotlin.math.min
 
 
 @Service
@@ -16,9 +16,6 @@ class SelectionCriteriaService(private val selectionCriteriaRepository: Selectio
 
     @Autowired
     lateinit var weightedCriteriaService: WeightedCriteriaService
-
-    @Autowired
-    lateinit var selectionCriteriaService: SelectionCriteriaService
 
     fun getSelectionCriteria(username: String, decisionId: Long): Iterable<SelectionCriteria> {
 
@@ -45,6 +42,7 @@ class SelectionCriteriaService(private val selectionCriteriaRepository: Selectio
         val decisionLocal = decisionService.getDecisionById(username, decisionId) ?: return null
 
         //Authenticate Decision Option
+        //TODO check if authentication really works here
         val selectionCriteriaLocal = selectionCriteriaRepository.findById(selectionCriteria.id).orElse(null)
 
         //Save Decision Option
@@ -54,16 +52,16 @@ class SelectionCriteriaService(private val selectionCriteriaRepository: Selectio
 
     }
 
-    fun deleteSelectionCriteria(username: String, decisionId: Long, optionId:Long): Boolean {
+    fun deleteSelectionCriteria(username: String, decisionId: Long, optionId: Long): Boolean {
 
         val selectionCriteria = getSelectionCriteriaById(username, decisionId, optionId)
 
         weightedCriteriaService.deleteWeightedCriteriaOrphans(username, decisionId, optionId)
 
-        return if (selectionCriteria != null){
+        return if (selectionCriteria != null) {
             selectionCriteriaRepository.deleteById(optionId)
             true
-        }else{
+        } else {
             false
         }
     }
@@ -76,18 +74,20 @@ class SelectionCriteriaService(private val selectionCriteriaRepository: Selectio
         val weightedCriteria = decisionLocal.weightedCriteria
         val selectionCriteria = decisionLocal.selectionCriteria
 
-        val weightSum = weightedCriteria.sumBy { abs(it.weight) }
+        //Get max sum of weighted criteria
+        val weightSum = weightedCriteria.sumBy { Math.abs(it.weight) }
 
 
+        //Sum Values
         selectionCriteria.forEach { selectionCriteria ->
 
             var score = weightedCriteria.filter {
                 (it.selectionCriteria1Id == selectionCriteria.id && it.weight <= 0) ||
-                (it.selectionCriteria2Id == selectionCriteria.id && it.weight > 0)
+                        (it.selectionCriteria2Id == selectionCriteria.id && it.weight > 0)
             }.sumBy { Math.abs(it.weight) }.toDouble()
 
             //Make value 0.0 - 10.0 scale
-            score = Math.round(score / weightSum * 100) / 10.0
+            score = min( Math.round(score / weightSum * 100) / 10.0 ,10.0)
 
             selectionCriteriaRepository.save(selectionCriteria.copy(score = score))
         }

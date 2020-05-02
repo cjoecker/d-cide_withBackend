@@ -5,6 +5,7 @@ import com.dcide.dcide.model.DecisionOption
 import com.dcide.dcide.model.DecisionOptionRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import kotlin.math.min
 
 
 @Service
@@ -62,10 +63,13 @@ class DecisionOptionService(private val decisionOptionRepository: DecisionOption
         }
     }
 
+    //TODO delete comments
+
     fun calculateDecisionOptionsScore(username: String, decisionId: Long){
 
         val decisionLocal = decisionService.getDecisionById(username, decisionId) ?: return
 
+        //weight selection criteria first
         selectionCriteriaService.weightSelectionCriteria(username, decisionId)
 
         val decisionOptions = decisionLocal.decisionOption
@@ -89,7 +93,7 @@ class DecisionOptionService(private val decisionOptionRepository: DecisionOption
             }
 
             //Round to one decimal
-            score = if (weightSum == 0) 0.0 else (score / 10).toInt().toDouble() / 10
+            score = if (weightSum == 0) 0.0 else min((score / 10).toInt().toDouble() / 10,10.0)
 
             decisionOption.score = score
 
