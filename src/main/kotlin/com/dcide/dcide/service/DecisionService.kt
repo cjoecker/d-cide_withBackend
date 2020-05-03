@@ -41,20 +41,12 @@ class DecisionService(private val decisionRepository: DecisionRepository) {
 
 
     fun saveDecision(username: String, decision: Decision): Decision? {
-        if (decision.id != null && getDecisionById(username, decision.id!!) == null)
-            return null
+        if (getDecisionById(username, decision.id!!) == null) return null
 
-        if (decision.user == null) {
-            decision.user = userRepository.findByUsername(username)
-        } else {
-            if (userService.authenticateUser(decision.user!!.username, decision.user!!.password).isAuthenticated) {
-                decision.user = userRepository.findByUsername(decision.user!!.username)
-            }
-        }
+        decision.user = userRepository.findByUsername(username)
 
         return decisionRepository.save(decision)
     }
-
 
     fun createExampleData(username: String, decision: Decision) {
         createTestDecisionOptions(username, decision)

@@ -1,7 +1,7 @@
 package com.dcide.dcide.security
 
 object SecurityConstants {
-
+//TODO check where to save this safely
     const val SIGN_UP_URLS = "/api/users/**"
     const val LOGIN_URLS = "/api/sessions/**"
     const val H2_URL = "h2-console/**"
