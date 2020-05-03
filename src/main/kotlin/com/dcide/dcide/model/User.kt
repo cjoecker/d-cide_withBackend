@@ -3,11 +3,13 @@ package com.dcide.dcide.model
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
+import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import java.util.*
 import javax.persistence.*
-import javax.validation.constraints.*
-import org.springframework.security.core.GrantedAuthority
+import javax.validation.constraints.Email
+import javax.validation.constraints.NotBlank
+import javax.validation.constraints.NotEmpty
 
 //Data Class cannot be used because getters and setter from UserDetails cannot be overwritten
 @Entity
@@ -45,13 +47,8 @@ data class User(
         var  updated_At: Date = Date()
 
 
-
-
-
 ):UserDetails {
 
-    //Relationships
-    //Child
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.REFRESH], mappedBy = "user", orphanRemoval = true)
     @JsonIgnore
     val decision: MutableSet<Decision> = mutableSetOf()
@@ -60,9 +57,6 @@ data class User(
         return username
     }
 
-    fun setUsername(username: String){
-        this.username = username
-    }
 
     override fun getPassword(): String {
         return password

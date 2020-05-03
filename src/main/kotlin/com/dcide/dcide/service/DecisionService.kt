@@ -76,7 +76,7 @@ class DecisionService(private val decisionRepository: DecisionRepository) {
             )
         }
     }
-//TODO take out all the decision IDs where it is not needed
+//TODO delete orphans on delete decision
     fun deleteAllDecisions(username: String) {
         decisionRepository.deleteAll(getDecisionsByUser(username))
     }

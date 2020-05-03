@@ -18,5 +18,4 @@ data class WeightedCriteria(
         @ManyToOne(fetch = FetchType.EAGER)
         @JsonIgnore
         var decision: Decision?
-
 )

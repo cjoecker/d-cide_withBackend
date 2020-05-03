@@ -10,12 +10,9 @@ data class SelectionCriteria(
         val name: String,
         val score: Double = 0.0,
 
-        //Relationships
-        //Parent
         @ManyToOne(fetch = FetchType.EAGER)
         @JsonIgnore
         var decision: Decision?
-
 
 ) {
 }

@@ -23,16 +23,11 @@ data class Decision(
         @JsonIgnore
         var updated_At: Date = Date(),
 
-
-        //Relationships
-        //Parent
         @ManyToOne(fetch = FetchType.EAGER)
         @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
         var user : User?
 ) {
 
-    //Relationships
-    //Child
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.REFRESH], mappedBy = "decision", orphanRemoval = true)
     @JsonIgnore
     val decisionOption: MutableSet<DecisionOption> = mutableSetOf()

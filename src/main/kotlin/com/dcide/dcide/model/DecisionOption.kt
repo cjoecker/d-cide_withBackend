@@ -11,8 +11,6 @@ data class DecisionOption(
         var name: String,
         var score: Double,
 
-        //Relationships
-        //Parent
         @ManyToOne(fetch = FetchType.EAGER)
         @JsonIgnore
         var decision : Decision?
