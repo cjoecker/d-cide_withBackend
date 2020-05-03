@@ -73,52 +73,44 @@ class RatedOptionService(private val ratedOptionRepository: RatedOptionRepositor
         val decision = decisionService.getDecisionById(username, decisionId) ?: return
 
         
-        val ratedOptionsListOld = ratedOptionRepository.findAll().filter {
+        val oldRatedOptionsList = ratedOptionRepository.findAll().filter {
             it.decision?.id == decision.id
         }
 
-
         val ratedOptionsListNew: MutableList<RatedOption> = mutableListOf()
 
+        val decisionOptions = decisionOptionService
+                .getDecisionOptions(username, decisionId)
+        val selectionCriteria = selectionCriteriaService
+                .getSelectionCriteria(username, decisionId)
 
-        val decisionOptionList = decisionOptionService.getDecisionOptions(username, decisionId).toList()
+        selectionCriteria.forEach { selectionCriteriaLocal ->
 
-        val decisionOptionNum = decisionOptionList.count() - 1
-
-
-        val selectionCriteriaList = selectionCriteriaService.getSelectionCriteria(username, decisionId).toList()
-
-        val selectionCriteriaNum = selectionCriteriaList.count() - 1
-
-        for (i in 0..selectionCriteriaNum) {
-
-            for (j in 0..decisionOptionNum) {
-
+            decisionOptions.forEach { decisionOption ->
 
                 var id: Long = 0
                 var score = 50
 
-                val filteredRatedOption = ratedOptionsListOld.filter {
-                    it.selectionCriteriaId == selectionCriteriaList[i].id &&
-                    it.decisionOptionId == decisionOptionList[j].id
+                val oldRatedOption = oldRatedOptionsList.filter {
+                    it.selectionCriteriaId == selectionCriteriaLocal.id &&
+                            it.decisionOptionId == decisionOption.id
 
                 }
-
-
-                if (filteredRatedOption.count() > 0) {
-                    id = filteredRatedOption[0].id
-                    score = filteredRatedOption[0].score
+                if (oldRatedOption.count() > 0) {
+                    id = oldRatedOption[0].id
+                    score = oldRatedOption[0].score
                 }
 
-                val ratedOptions = RatedOption(
+                val ratedOption = RatedOption(
                         id,
                         score,
-                        decisionOptionList[j].id,
-                        selectionCriteriaList[i].id,
+                        decisionOption.id,
+                        selectionCriteriaLocal.id,
                         decision
                 )
 
-                ratedOptionsListNew.add(ratedOptions)
+                ratedOptionsListNew.add(ratedOption)
+
             }
         }
 
