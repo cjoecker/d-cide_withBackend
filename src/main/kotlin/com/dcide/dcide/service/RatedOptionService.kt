@@ -20,10 +20,10 @@ class RatedOptionService(private val ratedOptionRepository: RatedOptionRepositor
     lateinit var decisionOptionService: DecisionOptionService
     
 
-    fun saveRatedOption(username: String, decisionId: Long, ratedOption: RatedOption) {
+    fun saveRatedOption(username: String, decisionId: Long, ratedOption: RatedOption): RatedOption? {
 
         //Authenticate decision
-        val decision = decisionService.getDecisionById(username, decisionId) ?: return
+        val decision = decisionService.getDecisionById(username, decisionId) ?: return null
 
         val ratedOptionLocal: RatedOption
 
@@ -57,8 +57,10 @@ class RatedOptionService(private val ratedOptionRepository: RatedOptionRepositor
             }
 
             //save ratedOption
-            ratedOptionRepository.save(ratedOptionLocal)
+            return ratedOptionRepository.save(ratedOptionLocal)
         }
+
+        return null
     }
 
     fun getRatedOptions(username: String, decisionId: Long): Iterable<RatedOption>? {

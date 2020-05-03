@@ -22,13 +22,7 @@ internal class RatedOptionController(private val ratedOptionRepository: RatedOpt
     @GetMapping("")
     fun getRatedOptions(@PathVariable decisionId: Long, principal: Principal): ResponseEntity<*> {
 
-        val ratedOptions = ratedOptionService.getRatedOptions(principal.name, decisionId)
-
-        return if (ratedOptions != null) {
-            ResponseEntity<Any>(ratedOptions, HttpStatus.OK)
-        } else {
-            ResponseEntity<Any>(null, HttpStatus.NOT_FOUND)
-        }
+        return ResponseEntity<Any>(ratedOptionService.getRatedOptions(principal.name, decisionId), HttpStatus.OK)
 
     }
 
@@ -36,11 +30,13 @@ internal class RatedOptionController(private val ratedOptionRepository: RatedOpt
     fun saveRatedOption(@PathVariable decisionId: Long, @Valid @RequestBody ratedOption: RatedOption,
                                 principal: Principal): ResponseEntity<*> {
 
+        val savedRatedOption = ratedOptionService.saveRatedOption(principal.name, decisionId, ratedOption)
 
-        ratedOptionService.saveRatedOption(principal.name, decisionId, ratedOption)
-
-        return ResponseEntity<Any>(null, HttpStatus.OK)
-
+        return if (savedRatedOption != null) {
+            ResponseEntity<Any>(savedRatedOption, HttpStatus.OK)
+        } else {
+            ResponseEntity<Any>(null, HttpStatus.BAD_REQUEST)
+        }
     }
 
 }
