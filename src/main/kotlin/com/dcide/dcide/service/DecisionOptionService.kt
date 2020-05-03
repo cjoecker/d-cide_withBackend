@@ -38,13 +38,14 @@ class DecisionOptionService(private val decisionOptionRepository: DecisionOption
 
     fun saveDecisionOption(username: String, decisionId: Long, decisionOption: DecisionOption): DecisionOption? {
 
-        //Authenticate Decision
         val decisionLocal = decisionService.getDecisionById(username, decisionId) ?: return null
 
-        //Authenticate Decision Option
+
         val decisionOptionLocal = decisionOptionRepository.findById(decisionOption.id).orElse(null)
 
-        //Save Decision Option
+        if(decisionOptionLocal != null && decisionOptionLocal.decision!!.user!!.username != username) return null
+
+
         decisionOption.decision = decisionLocal
 
         return decisionOptionRepository.save(decisionOption)
