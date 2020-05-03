@@ -24,7 +24,7 @@ class DecisionOptionService(private val decisionOptionRepository: DecisionOption
                     it.decision?.id == decisionId
         }
 
-        return decisionOptions.toList().sortedByDescending { it.id }
+        return decisionOptions.toList()
     }
 
 
