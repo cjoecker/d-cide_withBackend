@@ -18,6 +18,9 @@ class SelectionCriteriaService(private val selectionCriteriaRepository: Selectio
     @Autowired
     lateinit var weightedCriteriaService: WeightedCriteriaService
 
+    @Autowired
+    lateinit var ratedOptionService: RatedOptionService
+
     fun getSelectionCriteria(username: String, decisionId: Long): Iterable<SelectionCriteria> {
 
         val selectionCriteria = selectionCriteriaRepository.findAll().filter {
@@ -52,13 +55,14 @@ class SelectionCriteriaService(private val selectionCriteriaRepository: Selectio
 
     }
 
-    fun deleteSelectionCriteria(username: String, decisionId: Long, optionId: Long): Boolean {
+    fun deleteSelectionCriteria(username: String, decisionId: Long, criteriaId: Long): Boolean {
 
-        val selectionCriteria = getSelectionCriteriaById(username, decisionId, optionId)
+        val selectionCriteria = getSelectionCriteriaById(username, decisionId, criteriaId)
 
         return if (selectionCriteria != null) {
-            weightedCriteriaService.deleteWeightedCriteriaOrphans(username, decisionId, optionId)
-            selectionCriteriaRepository.deleteById(optionId)
+            weightedCriteriaService.deleteWeightedCriteriaOrphans(username, decisionId, criteriaId)
+            ratedOptionService.deleteRateOptionsOrphans(username, decisionId, criteriaId, 0)
+            selectionCriteriaRepository.deleteById(criteriaId)
             true
         } else {
             false

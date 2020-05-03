@@ -118,5 +118,17 @@ class RatedOptionService(private val ratedOptionRepository: RatedOptionRepositor
 
     }
 
+    fun deleteRateOptionsOrphans(username: String, decisionId: Long, selectionCriteriaId: Long, decisionOptionId: Long) {
+
+        val weightedCriteria = ratedOptionRepository.findAll().filter {
+            it.decision?.id == decisionId &&
+                    (it.selectionCriteriaId == selectionCriteriaId ||
+                            it.decisionOptionId == decisionOptionId)
+        }
+
+        ratedOptionRepository.deleteAll(weightedCriteria)
+
+    }
+
 
 }

@@ -17,6 +17,9 @@ class DecisionOptionService(private val decisionOptionRepository: DecisionOption
     @Autowired
     lateinit var selectionCriteriaService: SelectionCriteriaService
 
+    @Autowired
+    lateinit var ratedOptionService: RatedOptionService
+
     fun getDecisionOptions(username: String, decisionId: Long): Iterable<DecisionOption> {
 
         return decisionOptionRepository.findAll().filter {
@@ -56,6 +59,7 @@ class DecisionOptionService(private val decisionOptionRepository: DecisionOption
         val decisionOptionLocal = getDecisionOptionsById(username, decisionId, optionId)
 
         return if (decisionOptionLocal != null){
+            ratedOptionService.deleteRateOptionsOrphans(username, decisionId, 0, optionId)
             decisionOptionRepository.deleteById(optionId)
             true
         }else{

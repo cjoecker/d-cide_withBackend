@@ -99,10 +99,8 @@ class WeightedCriteriaService(private val weightedCriteriaRepository: WeightedCr
 
     fun deleteWeightedCriteriaOrphans(username: String, decisionId: Long, selectionCriteriaId: Long) {
 
-        val decision = decisionService.getDecisionById(username, decisionId) ?: return
-
         val weightedCriteria = weightedCriteriaRepository.findAll().filter {
-            it.decision?.id == decision.id &&
+            it.decision?.id == decisionId &&
                     (it.selectionCriteria1Id == selectionCriteriaId ||
                             it.selectionCriteria2Id == selectionCriteriaId)
         }
