@@ -24,9 +24,7 @@ internal class DecisionsController(private val decisionRepository: DecisionRepos
     @GetMapping("")
     fun getDecisions(principal: Principal): ResponseEntity<*>  {
 
-        val decisions  = decisionService.getDecisionsByUser(principal.name)
-
-        return ResponseEntity<Any>(decisions, HttpStatus.OK)
+        return ResponseEntity<Any>(decisionService.getDecisionsByUser(principal.name), HttpStatus.OK)
 
     }
 
