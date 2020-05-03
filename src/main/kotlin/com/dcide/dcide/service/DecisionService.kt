@@ -68,7 +68,7 @@ class DecisionService(private val decisionRepository: DecisionRepository) {
             )
         }
     }
-//TODO delete orphans on delete decision
+
     fun deleteAllDecisions(username: String) {
         decisionRepository.deleteAll(getDecisionsByUser(username))
     }

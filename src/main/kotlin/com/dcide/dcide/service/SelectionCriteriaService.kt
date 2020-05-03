@@ -55,9 +55,8 @@ class SelectionCriteriaService(private val selectionCriteriaRepository: Selectio
 
         val selectionCriteria = getSelectionCriteriaById(username, decisionId, optionId)
 
-        weightedCriteriaService.deleteWeightedCriteriaOrphans(username, decisionId, optionId)
-
         return if (selectionCriteria != null) {
+            weightedCriteriaService.deleteWeightedCriteriaOrphans(username, decisionId, optionId)
             selectionCriteriaRepository.deleteById(optionId)
             true
         } else {
