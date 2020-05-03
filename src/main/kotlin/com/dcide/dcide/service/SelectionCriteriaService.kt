@@ -38,14 +38,13 @@ class SelectionCriteriaService(private val selectionCriteriaRepository: Selectio
 
     fun saveSelectionCriteria(username: String, decisionId: Long, selectionCriteria: SelectionCriteria): SelectionCriteria? {
 
-        //Authenticate Decision
         val decisionLocal = decisionService.getDecisionById(username, decisionId) ?: return null
 
-        //Authenticate Decision Option
-        //TODO check if authentication really works here
         val selectionCriteriaLocal = selectionCriteriaRepository.findById(selectionCriteria.id).orElse(null)
 
-        //Save Decision Option
+        if(selectionCriteriaLocal != null && selectionCriteriaLocal.decision!!.user!!.username != username)
+            return null
+
         selectionCriteria.decision = decisionLocal
 
         return selectionCriteriaRepository.save(selectionCriteria)

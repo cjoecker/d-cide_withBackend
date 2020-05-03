@@ -43,7 +43,8 @@ class DecisionOptionService(private val decisionOptionRepository: DecisionOption
 
         val decisionOptionLocal = decisionOptionRepository.findById(decisionOption.id).orElse(null)
 
-        if(decisionOptionLocal != null && decisionOptionLocal.decision!!.user!!.username != username) return null
+        if(decisionOptionLocal != null && decisionOptionLocal.decision!!.user!!.username != username)
+            return null
 
 
         decisionOption.decision = decisionLocal

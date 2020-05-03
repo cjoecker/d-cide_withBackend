@@ -49,7 +49,7 @@ internal class DecisionOptionController(private val decisionOptionRepository: De
         val decision = decisionOptionsService.saveDecisionOption(principal.name, decisionId, decisionOption)
 
         return if (decision != null) {
-            ResponseEntity<Any>(decision, HttpStatus.OK)
+            ResponseEntity<Any>(decision, HttpStatus.CREATED)
         } else {
             ResponseEntity<Any>(null, HttpStatus.BAD_REQUEST)
         }
