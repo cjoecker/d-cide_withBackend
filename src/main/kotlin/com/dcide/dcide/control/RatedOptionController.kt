@@ -22,9 +22,14 @@ internal class RatedOptionController(private val ratedOptionRepository: RatedOpt
     @GetMapping("")
     fun getRatedOptions(@PathVariable decisionId: Long, principal: Principal): ResponseEntity<*> {
 
-        ratedOptionService.createRatedOptions(principal.name, decisionId)
+        val ratedOptions = ratedOptionService.getRatedOptions(principal.name, decisionId)
 
-        return ResponseEntity<Any>(ratedOptionService.getRatedOptions(principal.name, decisionId), HttpStatus.OK)
+        return if (ratedOptions != null) {
+            ResponseEntity<Any>(ratedOptions, HttpStatus.OK)
+        } else {
+            ResponseEntity<Any>(null, HttpStatus.NOT_FOUND)
+        }
+
     }
 
     @PutMapping("")

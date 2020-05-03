@@ -1,7 +1,8 @@
 package com.dcide.dcide.service
 
 
-import com.dcide.dcide.model.*
+import com.dcide.dcide.model.RatedOption
+import com.dcide.dcide.model.RatedOptionRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -61,6 +62,8 @@ class RatedOptionService(private val ratedOptionRepository: RatedOptionRepositor
     }
 
     fun getRatedOptions(username: String, decisionId: Long): Iterable<RatedOption>? {
+
+        createRatedOptions(username, decisionId)
 
         return ratedOptionRepository.findAll().filter {
             it.decision?.id == decisionId &&
