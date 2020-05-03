@@ -41,7 +41,7 @@ class DecisionService(private val decisionRepository: DecisionRepository) {
 
 
     fun saveDecision(username: String, decision: Decision): Decision? {
-        if (getDecisionById(username, decision.id!!) == null) return null
+        if (decision.id != null && getDecisionById(username, decision.id!!) == null) return null
 
         decision.user = userRepository.findByUsername(username)
 
