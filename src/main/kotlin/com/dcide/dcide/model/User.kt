@@ -11,7 +11,7 @@ import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotEmpty
 
-//Data Class cannot be used because getters and setter from UserDetails cannot be overwritten
+
 @Entity
 data class User(
         @Id
@@ -73,22 +73,22 @@ data class User(
 
     @JsonIgnore
     override fun isEnabled(): Boolean {
-        return true //To change body of created functions use File | Settings | File Templates.
+        return true
     }
 
     @JsonIgnore
     override fun isCredentialsNonExpired(): Boolean {
-        return true //To change body of created functions use File | Settings | File Templates.
+        return true
     }
 
     @JsonIgnore
     override fun isAccountNonExpired(): Boolean {
-        return true //To change body of created functions use File | Settings | File Templates.
+        return true
     }
 
     @JsonIgnore
     override fun isAccountNonLocked(): Boolean {
-        return true//To change body of created functions use File | Settings | File Templates.
+        return true
     }
 
     @PrePersist

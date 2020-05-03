@@ -65,13 +65,10 @@ class DecisionOptionService(private val decisionOptionRepository: DecisionOption
         }
     }
 
-    //TODO delete comments
-
     fun calculateDecisionOptionsScore(username: String, decisionId: Long){
 
         val decisionLocal = decisionService.getDecisionById(username, decisionId) ?: return
 
-        //weight selection criteria first
         selectionCriteriaService.weightSelectionCriteria(username, decisionId)
 
         val decisionOptions = decisionLocal.decisionOption
@@ -79,9 +76,7 @@ class DecisionOptionService(private val decisionOptionRepository: DecisionOption
         val ratedOptions = decisionLocal.ratedOption
         val selectionCriteria = decisionLocal.selectionCriteria
 
-        //Get max sum of weighted criteria
         val weightSum = weightedCriteria.sumBy { Math.abs(it.weight) }
-
 
         decisionOptions.forEach { decisionOption ->
 
@@ -94,7 +89,6 @@ class DecisionOptionService(private val decisionOptionRepository: DecisionOption
                 score += ratedOption.score * selectionCriteriaLocal[0].score
             }
 
-            //Round to one decimal
             score = if (weightSum == 0) 0.0 else min((score / 10).toInt().toDouble() / 10,10.0)
 
             decisionOption.score = score

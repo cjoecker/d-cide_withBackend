@@ -67,17 +67,14 @@ class SelectionCriteriaService(private val selectionCriteriaRepository: Selectio
 
     fun weightSelectionCriteria(username: String, decisionId: Long) {
 
-        //Authenticate Decision
         val decisionLocal = decisionService.getDecisionById(username, decisionId) ?: return
 
         val weightedCriteria = decisionLocal.weightedCriteria
         val selectionCriteria = decisionLocal.selectionCriteria
 
-        //Get max sum of weighted criteria
         val weightSum = weightedCriteria.sumBy { Math.abs(it.weight) }
 
 
-        //Sum Values
         selectionCriteria.forEach { selectionCriteria ->
 
             var score = weightedCriteria.filter {
@@ -85,7 +82,6 @@ class SelectionCriteriaService(private val selectionCriteriaRepository: Selectio
                         (it.selectionCriteria2Id == selectionCriteria.id && it.weight > 0)
             }.sumBy { Math.abs(it.weight) }.toDouble()
 
-            //Make value 0.0 - 10.0 scale
             score = min( Math.round(score / weightSum * 100) / 10.0 ,10.0)
 
             selectionCriteriaRepository.save(selectionCriteria.copy(score = score))

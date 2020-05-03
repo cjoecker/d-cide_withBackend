@@ -18,15 +18,11 @@ class WeightedCriteriaService(private val weightedCriteriaRepository: WeightedCr
 
     fun createWeightedCriteria(username: String, decisionId: Long) {
 
-        //Authenticate decision
         val decision = decisionService.getDecisionById(username, decisionId) ?: return
 
-
-        //get old weighted criteria
         val weightedCriteriaListOld = weightedCriteriaRepository.findAll().filter {
             it.decision?.id == decision.id
         }
-
 
         val weightedCriteriaListNew: MutableList<WeightedCriteria> = mutableListOf()
 
@@ -42,7 +38,7 @@ class WeightedCriteriaService(private val weightedCriteriaRepository: WeightedCr
                 var id: Long = 0
                 var weight = 0
 
-                //Get old values
+
                 val filteredCriteria = weightedCriteriaListOld.filter {
                     it.selectionCriteria1Id == selectionCriteriaList[i].id &&
                             it.selectionCriteria2Id == selectionCriteriaList[j].id
@@ -54,7 +50,6 @@ class WeightedCriteriaService(private val weightedCriteriaRepository: WeightedCr
                     weight = filteredCriteria[0].weight
                 }
 
-                //Create new weighted criteria
                 val weightedCriteria = WeightedCriteria(
                         id,
                         weight,
@@ -67,7 +62,6 @@ class WeightedCriteriaService(private val weightedCriteriaRepository: WeightedCr
             }
         }
 
-        //Update Data
         weightedCriteriaRepository.saveAll(weightedCriteriaListNew)
 
     }
@@ -105,7 +99,6 @@ class WeightedCriteriaService(private val weightedCriteriaRepository: WeightedCr
 
     fun deleteWeightedCriteriaOrphans(username: String, decisionId: Long, selectionCriteriaId: Long) {
 
-        //Authenticate decision
         val decision = decisionService.getDecisionById(username, decisionId) ?: return
 
         val weightedCriteria = weightedCriteriaRepository.findAll().filter {

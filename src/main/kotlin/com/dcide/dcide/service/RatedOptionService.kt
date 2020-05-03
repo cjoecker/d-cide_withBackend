@@ -22,16 +22,13 @@ class RatedOptionService(private val ratedOptionRepository: RatedOptionRepositor
 
     fun saveRatedOption(username: String, decisionId: Long, ratedOption: RatedOption): RatedOption? {
 
-        //Authenticate decision
         val decision = decisionService.getDecisionById(username, decisionId) ?: return null
 
         val ratedOptionLocal: RatedOption
 
-        //Get related objects
         val selectionCriteria = selectionCriteriaService.getSelectionCriteriaById(username, decisionId, ratedOption.selectionCriteriaId)
         val decisionOption = decisionOptionService.getDecisionOptionsById(username, decisionId, ratedOption.decisionOptionId)
 
-        //search for existing ratedOptions
         val filteredRatedOption = ratedOptionRepository.findAll().filter {
             it.selectionCriteriaId == ratedOption.selectionCriteriaId &&
                     it.decisionOptionId == ratedOption.decisionOptionId
@@ -39,14 +36,12 @@ class RatedOptionService(private val ratedOptionRepository: RatedOptionRepositor
 
         if (selectionCriteria != null && decisionOption != null) {
 
-            //Update ratedOption rating if found
             if (filteredRatedOption.isNotEmpty()) {
                 ratedOptionLocal = filteredRatedOption[0]
                 ratedOptionLocal.score = ratedOption.score
                 ratedOptionLocal.decision = decision
 
             } else {
-                //Create ratedOption if not found
                 ratedOptionLocal = RatedOption(
                         0,
                         ratedOption.score,
@@ -56,7 +51,6 @@ class RatedOptionService(private val ratedOptionRepository: RatedOptionRepositor
                 )
             }
 
-            //save ratedOption
             return ratedOptionRepository.save(ratedOptionLocal)
         }
 
@@ -76,7 +70,6 @@ class RatedOptionService(private val ratedOptionRepository: RatedOptionRepositor
 
     fun createRatedOptions(username: String, decisionId: Long) {
 
-        //Authenticate decision
         val decision = decisionService.getDecisionById(username, decisionId) ?: return
 
         
@@ -105,7 +98,6 @@ class RatedOptionService(private val ratedOptionRepository: RatedOptionRepositor
                 var id: Long = 0
                 var score = 50
 
-                //Get old values
                 val filteredRatedOption = ratedOptionsListOld.filter {
                     it.selectionCriteriaId == selectionCriteriaList[i].id &&
                     it.decisionOptionId == decisionOptionList[j].id
@@ -118,7 +110,6 @@ class RatedOptionService(private val ratedOptionRepository: RatedOptionRepositor
                     score = filteredRatedOption[0].score
                 }
 
-                //Create new scoreed criteria
                 val ratedOptions = RatedOption(
                         id,
                         score,
@@ -131,7 +122,6 @@ class RatedOptionService(private val ratedOptionRepository: RatedOptionRepositor
             }
         }
 
-        //Update Data
         ratedOptionRepository.saveAll(ratedOptionsListNew)
 
     }
