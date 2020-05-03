@@ -19,12 +19,10 @@ class DecisionOptionService(private val decisionOptionRepository: DecisionOption
 
     fun getDecisionOptions(username: String, decisionId: Long): Iterable<DecisionOption> {
 
-        val decisionOptions = decisionOptionRepository.findAll().filter {
+        return decisionOptionRepository.findAll().filter {
             it.decision?.user?.username == username &&
                     it.decision?.id == decisionId
         }
-
-        return decisionOptions.toList()
     }
 
 

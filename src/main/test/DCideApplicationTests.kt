@@ -1,7 +1,6 @@
 package com.dcide.dcide
 
 import com.dcide.dcide.model.Decision
-import com.dcide.dcide.model.RatedOption
 import com.dcide.dcide.model.User
 import com.dcide.dcide.model.UserRepository
 import com.dcide.dcide.service.*
@@ -149,27 +148,19 @@ class DCideApplicationTests {
 
     fun rateOptions(decision : Decision) {
 
-        val decisionOptions = decisionOptionService
-                .getDecisionOptions(username, decisionId)
-        val selectionCriteria = selectionCriteriaService
-                .getSelectionCriteria(username, decisionId)
+        val ratedOptions = ratedOptionService.getRatedOptions(username, decisionId)
 
-        selectionCriteria.forEach { selecionCriteriaLocal ->
+        ratedOptions!!.forEach{ratedOptionLocal ->
 
-            decisionOptions.forEach { decisionOption ->
+            val decisionOptionLocal = decisionOptionService
+                    .getDecisionOptionsById(username, decisionId,ratedOptionLocal.decisionOptionId)
+            val selectionCriteriaLocal = selectionCriteriaService
+                    .getSelectionCriteriaById(username, decisionId, ratedOptionLocal.selectionCriteriaId)
 
-                val ratedOption = RatedOption(
-                        0,
-                        getRatedOptionsScore(selecionCriteriaLocal.name, decisionOption.name),
-                        decisionOption.id,
-                        selecionCriteriaLocal.id,
-                        decision
-                )
+            ratedOptionService.saveRatedOption(username, decisionId, ratedOptionLocal
+                    .copy(score = getRatedOptionsScore(selectionCriteriaLocal!!.name, decisionOptionLocal!!.name)))
 
-                ratedOptionService.saveRatedOption(username, decisionId, ratedOption)
-            }
         }
-
     }
     
     fun getRatedOptionsScore(selectionCriteriaName :String, decisionOptionName : String) : Int{
