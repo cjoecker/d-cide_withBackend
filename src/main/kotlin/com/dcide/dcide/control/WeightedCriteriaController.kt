@@ -2,16 +2,15 @@ package com.dcide.dcide.control
 
 
 
-import com.dcide.dcide.model.*
+import com.dcide.dcide.model.WeightedCriteria
+import com.dcide.dcide.model.WeightedCriteriaRepository
 import com.dcide.dcide.service.WeightedCriteriaService
-
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-
-import javax.validation.Valid
 import java.security.Principal
+import javax.validation.Valid
 
 
 @RestController
@@ -37,9 +36,13 @@ internal class WeightedCriteriaController(private val weightedCriteriaRepository
     fun saveAllWeightedCriteria(@PathVariable decisionId: Long, @Valid @RequestBody weightedCriteria: WeightedCriteria,
                                 principal: Principal): ResponseEntity<*> {
 
-        weightedCriteriaService.saveWeightedCriteria(principal.name, decisionId, weightedCriteria)
+        val newWeightedCriteria = weightedCriteriaService.saveWeightedCriteria(principal.name, decisionId, weightedCriteria)
 
-        return ResponseEntity<Any>(null, HttpStatus.OK)
+        return if (newWeightedCriteria != null) {
+            ResponseEntity<Any>(newWeightedCriteria, HttpStatus.OK)
+        } else {
+            ResponseEntity<Any>(null, HttpStatus.BAD_REQUEST)
+        }
 
     }
 

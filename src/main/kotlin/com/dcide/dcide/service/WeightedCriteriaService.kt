@@ -1,7 +1,8 @@
 package com.dcide.dcide.service
 
 
-import com.dcide.dcide.model.*
+import com.dcide.dcide.model.WeightedCriteria
+import com.dcide.dcide.model.WeightedCriteriaRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -90,15 +91,16 @@ class WeightedCriteriaService(private val weightedCriteriaRepository: WeightedCr
     }
 
 
-    fun saveWeightedCriteria(username: String, decisionId: Long, weightedCriteria: WeightedCriteria) {
+    fun saveWeightedCriteria(username: String, decisionId: Long, weightedCriteria: WeightedCriteria): WeightedCriteria? {
 
         val weightedCriteriaLocal = getWeightedCriteriaById(username, decisionId, weightedCriteria.id)
 
         if (weightedCriteriaLocal != null ) {
             weightedCriteriaLocal.weight = weightedCriteria.weight
-            weightedCriteriaRepository.save(weightedCriteriaLocal)
+            return weightedCriteriaRepository.save(weightedCriteriaLocal)
         }
 
+        return null
     }
 
     fun deleteWeightedCriteriaOrphans(username: String, decisionId: Long, selectionCriteriaId: Long) {
