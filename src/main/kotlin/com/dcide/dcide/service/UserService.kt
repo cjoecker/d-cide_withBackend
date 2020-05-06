@@ -3,10 +3,10 @@ package com.dcide.dcide.service
 import com.dcide.dcide.model.Decision
 import com.dcide.dcide.model.User
 import com.dcide.dcide.model.UserRepository
-import com.dcide.dcide.security.JwtTokenProvider
+import com.dcide.dcide.security.jwt.JwtTokenProvider
 
-import com.dcide.dcide.security.SecurityConstants
-import com.dcide.dcide.security.UsernameAlreadyExistsException
+import com.dcide.dcide.security.jwt.SecurityConstants
+import com.dcide.dcide.security.exceptions.UsernameAlreadyExistsException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken

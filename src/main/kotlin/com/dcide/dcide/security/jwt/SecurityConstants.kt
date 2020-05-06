@@ -1,4 +1,4 @@
-package com.dcide.dcide.security
+package com.dcide.dcide.security.jwt
 
 import io.jsonwebtoken.io.Decoders
 import io.jsonwebtoken.security.Keys

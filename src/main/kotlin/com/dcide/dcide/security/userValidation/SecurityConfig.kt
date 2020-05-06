@@ -1,8 +1,10 @@
-package com.dcide.dcide.security
+package com.dcide.dcide.security.userValidation
 
-import com.dcide.dcide.security.SecurityConstants.H2_URL
-import com.dcide.dcide.security.SecurityConstants.LOGIN_URLS
-import com.dcide.dcide.security.SecurityConstants.SIGN_UP_URLS
+import com.dcide.dcide.security.jwt.JwtAuthenticationEntryPoint
+import com.dcide.dcide.security.jwt.JwtAuthenticationFilter
+import com.dcide.dcide.security.jwt.SecurityConstants.H2_URL
+import com.dcide.dcide.security.jwt.SecurityConstants.LOGIN_URLS
+import com.dcide.dcide.security.jwt.SecurityConstants.SIGN_UP_URLS
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

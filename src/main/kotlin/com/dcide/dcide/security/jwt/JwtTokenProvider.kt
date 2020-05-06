@@ -1,14 +1,13 @@
-package com.dcide.dcide.security
+package com.dcide.dcide.security.jwt
 
 import com.dcide.dcide.model.User
-import com.dcide.dcide.security.SecurityConstants.EXPIRATION_TIME_IN_DAYS
-import com.dcide.dcide.security.SecurityConstants.SECRET_KEY
+import com.dcide.dcide.security.jwt.SecurityConstants.EXPIRATION_TIME_IN_DAYS
+import com.dcide.dcide.security.jwt.SecurityConstants.SECRET_KEY
 import io.jsonwebtoken.*
 import org.springframework.stereotype.Component
 import org.springframework.security.core.Authentication
 import java.util.*
 import io.jsonwebtoken.Jwts
-import io.jsonwebtoken.io.Encoders
 
 
 @Component

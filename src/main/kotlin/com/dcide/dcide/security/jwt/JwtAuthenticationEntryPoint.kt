@@ -1,5 +1,6 @@
-package com.dcide.dcide.security
+package com.dcide.dcide.security.jwt
 
+import com.dcide.dcide.security.responses.InvalidLoginResponse
 import com.google.gson.Gson
 import org.springframework.security.core.AuthenticationException
 import org.springframework.security.web.AuthenticationEntryPoint

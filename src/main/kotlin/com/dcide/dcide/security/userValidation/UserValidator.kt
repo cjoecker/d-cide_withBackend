@@ -1,4 +1,4 @@
-package com.dcide.dcide.security
+package com.dcide.dcide.security.userValidation
 
 import com.dcide.dcide.model.User
 import org.springframework.stereotype.Component

@@ -1,7 +1,8 @@
-package com.dcide.dcide.security
+package com.dcide.dcide.security.jwt
 
-import com.dcide.dcide.security.SecurityConstants.HEADER_STRING
-import com.dcide.dcide.security.SecurityConstants.TOKEN_PREFIX
+import com.dcide.dcide.security.userValidation.CustomUserDetailsService
+import com.dcide.dcide.security.jwt.SecurityConstants.HEADER_STRING
+import com.dcide.dcide.security.jwt.SecurityConstants.TOKEN_PREFIX
 import org.springframework.web.filter.OncePerRequestFilter
 import javax.servlet.http.HttpServletRequest
 import org.springframework.security.core.context.SecurityContextHolder
@@ -12,7 +13,6 @@ import javax.servlet.ServletException
 import javax.servlet.FilterChain
 import javax.servlet.http.HttpServletResponse
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.util.StringUtils
 import java.util.*
 
 

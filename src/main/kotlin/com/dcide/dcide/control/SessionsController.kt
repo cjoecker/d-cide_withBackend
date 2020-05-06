@@ -1,6 +1,6 @@
 package com.dcide.dcide.control
 
-import com.dcide.dcide.security.JwtLoginSucessResponse
+import com.dcide.dcide.security.responses.JwtLoginSucessResponse
 import com.dcide.dcide.service.UserService
 import com.dcide.dcide.service.WeightedCriteriaService
 import org.springframework.beans.factory.annotation.Autowired
