@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component
 import org.springframework.security.core.Authentication
 import java.util.*
 import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.io.Encoders
 
 
 @Component
@@ -28,6 +29,7 @@ class JwtTokenProvider {
         claims["fullName"] = user.fullName
         claims["registeredUser"] = user.registeredUser
 
+
         return Jwts.builder()
                 .setSubject(userId.toString())
                 .setClaims(claims)
@@ -35,7 +37,9 @@ class JwtTokenProvider {
                 .setExpiration(expiryDate)
                 .signWith(SECRET_KEY)
                 .compact()
+
     }
+
 
     fun validateToken(token: String): Boolean {
         try {
