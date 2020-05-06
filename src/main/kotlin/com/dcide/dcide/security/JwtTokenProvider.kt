@@ -2,13 +2,12 @@ package com.dcide.dcide.security
 
 import com.dcide.dcide.model.User
 import com.dcide.dcide.security.SecurityConstants.EXPIRATION_TIME_IN_DAYS
-import com.dcide.dcide.security.SecurityConstants.SECRET
+import com.dcide.dcide.security.SecurityConstants.SECRET_KEY
 import io.jsonwebtoken.*
 import org.springframework.stereotype.Component
 import org.springframework.security.core.Authentication
 import java.util.*
 import io.jsonwebtoken.Jwts
-import java.time.LocalDateTime
 
 
 @Component
@@ -34,32 +33,24 @@ class JwtTokenProvider {
                 .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
-                .signWith(SignatureAlgorithm.HS512, SECRET)
+                .signWith(SECRET_KEY)
                 .compact()
     }
 
     fun validateToken(token: String): Boolean {
         try {
-            Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token)
+            Jwts.parserBuilder().setSigningKey(SECRET_KEY).build().parseClaimsJws(token)
             return true
-        } catch (ex: SignatureException) {
-            println("Invalid JWT Signature")
-        } catch (ex: MalformedJwtException) {
-            println("Invalid JWT Token")
-        } catch (ex: ExpiredJwtException) {
-            println("Expired JWT token")
-        } catch (ex: UnsupportedJwtException) {
-            println("Unsupported JWT token")
-        } catch (ex: IllegalArgumentException) {
-            println("JWT claims string is empty")
+        } catch (ex: JwtException) {
+            println(ex.message)
         }
 
         return false
     }
 
     fun getUserIdFromJWT(token: String): Long? {
-        val claims = Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token).body
-        val id = claims["id"].toString()
+        val claims = Jwts.parserBuilder().setSigningKey(SECRET_KEY).build().parseClaimsJws(token).body
+        val id = claims["id"] as Double
 
         return id.toLong()
     }

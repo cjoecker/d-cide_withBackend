@@ -32,7 +32,7 @@ class JwtAuthenticationFilter: OncePerRequestFilter() {
 
             val jwt = getJWTFromRequest(httpServletRequest)
 
-            if (!jwt.isNullOrEmpty() && tokenProvider.validateToken(jwt!!)) {
+            if (!jwt.isNullOrEmpty() && tokenProvider.validateToken(jwt)) {
                 val userId = tokenProvider.getUserIdFromJWT(token = jwt)
                 val userDetails = customUserDetailsService.loadUserById(userId)
 
