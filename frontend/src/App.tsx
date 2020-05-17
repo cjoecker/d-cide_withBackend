@@ -139,6 +139,10 @@ const App: React.FC = () => {
 							&nbsp; by Christian Jöcker
 						</Grid>
 						<Grid style={{marginTop: theme.spacing(-0.5)}} item xs={12}>
+							<Link href='https://www.maibornwolff.de/en/node/2055' className={classes.link} underline='always'>
+								Digital Design & Engineering
+							</Link>
+							&nbsp;&nbsp;&nbsp;
 							<Link href='https://www.maibornwolff.de/en/privacy' className={classes.link} underline='always'>
 								Privacy
 							</Link>
